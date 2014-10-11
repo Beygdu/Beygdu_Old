@@ -11,6 +11,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 public class BeygingarActivity extends Activity {
 
@@ -28,7 +32,31 @@ public class BeygingarActivity extends Activity {
 		//Get the message from the intent
 		Intent intent = getIntent();
 		searchResults = intent.getStringArrayListExtra("searchResults");
+		initGUI();
+	}
+	
+	private void initGUI(){
+		setContentView(R.layout.activity_beygingar); // use your layout xml file here
 		
+		TableLayout tableLayout = (TableLayout) findViewById(R.id.tablelayout);
+		TableRow tableRows[] = new TableRow[1];
+		for (int i = 0; i < tableRows.length; i++){
+			tableRows[i] = new TableRow(this);
+			tableRows[i].setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+		            LayoutParams.WRAP_CONTENT));
+			tableRows[i].setWeightSum(2.0f);
+		    tableRows[i].setPadding(5, 5, 5, 5);
+		    for (String s: searchResults){
+		    	TextView text = new TextView(this);
+		    	text.setLayoutParams(new android.widget.TableRow.LayoutParams(android.widget.TableRow.LayoutParams.WRAP_CONTENT,
+		    			android.widget.TableRow.LayoutParams.WRAP_CONTENT, 1.0f));
+		    	text.setText(s);
+		    	tableRows[i].addView(text);
+		    	
+		    }
+		    
+		    tableLayout.addView(tableRows[i]);
+		}
 	}
 
 	@Override
