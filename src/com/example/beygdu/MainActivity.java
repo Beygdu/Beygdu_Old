@@ -1,12 +1,20 @@
 package com.example.beygdu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.EditText;
 
 public class MainActivity extends Activity {
 
+	public static ArrayList<String> searchResults;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,5 +38,29 @@ public class MainActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	public void btnOnClick(View view){
+		Intent intent = new Intent(this, BeygingarActivity.class);
+		
+		//Get word from editText and
+		
+		// TODO Here the SQL query could be made and called:
+		
+		// TODO make sure it is only one word.
+		EditText editText = (EditText) findViewById(R.id.mainSearch);
+		String word = editText.getText().toString();
+		searchResults = new ArrayList<String>();
+		
+		//tmp list
+		searchResults.add(word);
+		searchResults.add(word);
+		searchResults.add(word);
+		searchResults.add(word);
+		
+		intent.putStringArrayListExtra("searchResults", (ArrayList<String>) searchResults);
+		startActivity(intent);
+		
+		
 	}
 }

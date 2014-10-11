@@ -1,26 +1,40 @@
 package com.example.beygdu;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
+import android.widget.TextView;
 
 public class BeygingarActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_beygingar);
-		if (savedInstanceState == null) {
-			getFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
+//		setContentView(R.layout.activity_beygingar);
+//		if (savedInstanceState == null) {
+//			getFragmentManager().beginTransaction()
+//					.add(R.id.container, new PlaceholderFragment()).commit();
+//		}
+		
+		//Get the message from the intent
+		Intent intent = getIntent();
+		ArrayList<String> searchResults = intent.getStringArrayListExtra("searchResults");
+		
+		TextView textView = new TextView(this);
+		textView.setTextSize(40);
+		for (String s : searchResults){
+			textView.setText(s + "\n");
 		}
+		
+		setContentView(textView);
 	}
 
 	@Override
