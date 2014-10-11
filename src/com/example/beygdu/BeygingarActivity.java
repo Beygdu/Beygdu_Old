@@ -28,13 +28,6 @@ public class BeygingarActivity extends Activity {
 		Intent intent = getIntent();
 		ArrayList<String> searchResults = intent.getStringArrayListExtra("searchResults");
 		
-		TextView textView = new TextView(this);
-		textView.setTextSize(40);
-		for (String s : searchResults){
-			textView.setText(s + "\n");
-		}
-		
-		setContentView(textView);
 	}
 
 	@Override
