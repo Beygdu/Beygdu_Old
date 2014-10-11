@@ -7,5 +7,6 @@
     <string name="title">Beygingarlýsing íslensks nútímamáls</string>
     <string name="searchInput">Hvað viltu finna?</string>
     <string name="buttonSearch">Leita</string>
+    <string name="title_activity_beygingar">BeygingarActivity</string>
 
 </resources>
