@@ -11,10 +11,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 public class BeygingarActivity extends Activity {
 
+	private ArrayList<String> searchResults;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -26,7 +27,7 @@ public class BeygingarActivity extends Activity {
 		
 		//Get the message from the intent
 		Intent intent = getIntent();
-		ArrayList<String> searchResults = intent.getStringArrayListExtra("searchResults");
+		searchResults = intent.getStringArrayListExtra("searchResults");
 		
 	}
 
