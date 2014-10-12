@@ -11,26 +11,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
+import android.widget.Toast;
 
 public class BeygingarActivity extends Activity {
 
 	private ArrayList<String> searchResults;
+	private TableLayout layout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_beygingar);
-//		if (savedInstanceState == null) {
-//			getFragmentManager().beginTransaction()
-//					.add(R.id.container, new PlaceholderFragment()).commit();
-//		}
-		
+		super.onCreate(savedInstanceState);		
 		//Get the message from the intent
 		Intent intent = getIntent();
 		searchResults = intent.getStringArrayListExtra("searchResults");
-		
+		setTableText();
 	}
 
+	private void setTableText() {
+		layout = (TableLayout) findViewById(R.id.tablelayout);
+		
+		
+		Toast toast = Toast.makeText(getApplicationContext(), layout.getChildCount(), Toast.LENGTH_SHORT);
+		toast.show();
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.

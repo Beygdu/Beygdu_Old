@@ -1,26 +1,72 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.example.beygdu.BeygingarActivity"
-    tools:ignore="MergeRootFrame" >
+<?xml version="1.0" encoding="utf-8"?><LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical" 
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
 
-    <GridLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:columnCount="1" >
+        android:layout_height="200dp" >
 
-        <LinearLayout
-            android:layout_height="match_parent"
-            android:layout_width="100dp"
-            android:layout_column="0"
-            android:layout_gravity="left|top"
-            android:layout_row="0"
-            android:orientation="vertical" >
+        <TableLayout
+            android:id="@+id/tablelayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
 
-        </LinearLayout>
+            <TableRow style="@style/BodyRow" >
 
-    </GridLayout>
+                <TextView
+                    style="@style/BodyText"
+                    android:text="Eintala" />
 
-</FrameLayout>
+                <TextView
+                    style="@style/BodyText"
+                    android:text="Fleirtala" />
+            </TableRow>
+
+            <TableRow style="@style/BodyRow" >
+
+                <TextView
+                    style="@style/BodyText"
+                    android:text="Cell 1,1" />
+
+                <TextView
+                    style="@style/BodyText"
+                    android:text="Cell 1,2" />
+            </TableRow>
+
+            <TableRow style="@style/BodyRow" >
+
+                <TextView
+                    style="@style/BodyText"
+                    android:text="Cell 2,1" />
+
+                <TextView
+                    style="@style/BodyText"
+                    android:text="Cell 2,2" />
+            </TableRow>
+
+            <TableRow style="@style/BodyRow" >
+
+                <TextView
+                    style="@style/BodyText"
+                    android:text="Cell 3,1" />
+
+                <TextView
+                    style="@style/BodyText"
+                    android:text="Cell 3,2" />
+            </TableRow>
+
+            <TableRow style="@style/BodyRow" >
+
+                <TextView
+                    style="@style/BodyText"
+                    android:text="Cell 4,1" />
+
+                <TextView
+                    style="@style/BodyText"
+                    android:text="Cell 4,2" />
+            </TableRow>
+        </TableLayout>
+    </ScrollView>
+
+</LinearLayout>

@@ -8,5 +8,6 @@
     <string name="searchInput">Hvað viltu finna?</string>
     <string name="buttonSearch">Leita</string>
     <string name="title_activity_beygingar">BeygingarActivity</string>
+    <string name="title_activity_table_test">TableTest</string>
 
 </resources>
