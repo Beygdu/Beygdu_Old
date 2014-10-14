@@ -59,6 +59,10 @@ public class MainActivity extends Activity {
 		searchResults.add(word);
 		searchResults.add(word);
 		searchResults.add(word);
+		searchResults.add(word);
+		searchResults.add(word);
+		searchResults.add(word);
+		searchResults.add(word);
 		
 		intent.putStringArrayListExtra("searchResults", (ArrayList<String>) searchResults);
 		startActivity(intent);

@@ -11,17 +11,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TableLayout;
-import android.widget.Toast;
+import android.widget.TextView;
 
 public class BeygingarActivity extends Activity {
 
 	private ArrayList<String> searchResults;
-	private TableLayout layout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);		
+		super.onCreate(savedInstanceState);	
+		setContentView(R.layout.activity_beygingar);
+		
 		//Get the message from the intent
 		Intent intent = getIntent();
 		searchResults = intent.getStringArrayListExtra("searchResults");
@@ -29,11 +29,17 @@ public class BeygingarActivity extends Activity {
 	}
 
 	private void setTableText() {
-		layout = (TableLayout) findViewById(R.id.tablelayout);
-		
-		
-		Toast toast = Toast.makeText(getApplicationContext(), layout.getChildCount(), Toast.LENGTH_SHORT);
-		toast.show();
+		//layout = (TableLayout) findViewById(R.id.tablelayout);
+		//((TextView) findViewById(R.id.cell11)).setText(searchResults.get(1));
+		int counter = 0;
+		for(int row=0; row < 4; row++) {
+			   for(int col = 0; col < 2; col++) {
+			    String cellID = "cell" + row + col;
+			    int resID = getResources().getIdentifier(cellID, "id", "com.example.beygdu");
+			    ((TextView) findViewById(resID)).setText(searchResults.get(counter));
+			    counter++;
+			   }
+			}
 	}
 	
 	@Override
