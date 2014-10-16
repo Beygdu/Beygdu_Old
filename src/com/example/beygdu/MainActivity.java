@@ -1,20 +1,26 @@
 package com.example.beygdu;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Button;
+import android.widget.Toast;
 
+/**
+ * @author jfj1
+ * @version 1
+ * @since 09.10.14
+ */
 public class MainActivity extends Activity {
 
+	/**
+	 * The result from the database search.
+	 */
 	public static ArrayList<String> searchResults;
 	
 	@Override
@@ -42,31 +48,37 @@ public class MainActivity extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
+	
+	/**
+	 * @param view the view
+	 * Fills the List with search results and makes Intent which is sent to new Activity.
+	 */
 	public void btnOnClick(View view){
 		Intent intent = new Intent(this, BeygingarActivity.class);
 		
 		//Get word from editText and
-		
 		// TODO Here the SQL query could be made and called:
-		
 		// TODO make sure it is only one word.
 		EditText editText = (EditText) findViewById(R.id.mainSearch);
 		String word = editText.getText().toString();
-		searchResults = new ArrayList<String>();
+		if(word.contains(" ")){
+			Toast.makeText(this, "Einingis hægt að leita að einu orði í einu", Toast.LENGTH_SHORT).show();
+		} else {
+			searchResults = new ArrayList<String>();
 		
-		//tmp list
-		searchResults.add(word);
-		searchResults.add(word);
-		searchResults.add(word);
-		searchResults.add(word);
-		searchResults.add(word);
-		searchResults.add(word);
-		searchResults.add(word);
-		searchResults.add(word);
+			//tmp list
+			searchResults.add(word);
+			searchResults.add(word);
+			searchResults.add(word);
+			searchResults.add(word);
+			searchResults.add(word);
+			searchResults.add(word);
+			searchResults.add(word);
+			searchResults.add(word);
 		
-		intent.putStringArrayListExtra("searchResults", (ArrayList<String>) searchResults);
-		startActivity(intent);
-		
+			intent.putStringArrayListExtra("searchResults", (ArrayList<String>) searchResults);
+			startActivity(intent);
+		}
 		
 	}
 }

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,6 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+/**
+ * @author jfj1
+ * @since 10.10.14
+ * @version 1
+ *
+ */
 public class BeygingarActivity extends Activity {
 
 	private ArrayList<String> searchResults;
@@ -25,21 +33,14 @@ public class BeygingarActivity extends Activity {
 		//Get the message from the intent
 		Intent intent = getIntent();
 		searchResults = intent.getStringArrayListExtra("searchResults");
-		setTableText();
-	}
-
-	private void setTableText() {
-		//layout = (TableLayout) findViewById(R.id.tablelayout);
-		//((TextView) findViewById(R.id.cell11)).setText(searchResults.get(1));
-		int counter = 0;
-		for(int row=0; row < 4; row++) {
-			   for(int col = 0; col < 2; col++) {
-			    String cellID = "cell" + row + col;
-			    int resID = getResources().getIdentifier(cellID, "id", "com.example.beygdu");
-			    ((TextView) findViewById(resID)).setText(searchResults.get(counter));
-			    counter++;
-			   }
-			}
+		
+		
+		FragmentManager fm = getFragmentManager();
+		FragmentTransaction fragmentTransaction = fm.beginTransaction();
+		TableFragment table = new TableFragment(searchResults);
+		fragmentTransaction.add(R.id.tablefragments, table);
+		fragmentTransaction.commit();
+		
 	}
 	
 	@Override
@@ -64,17 +65,47 @@ public class BeygingarActivity extends Activity {
 	/**
 	 * A placeholder fragment containing a simple view.
 	 */
-	public static class PlaceholderFragment extends Fragment {
+	public static class TableFragment extends Fragment {
 
-		public PlaceholderFragment() {
+		ArrayList<String> content;
+		
+		/**
+		 * Needs to have an empty constructor
+		 */
+		public TableFragment(){
+		}
+		
+		/**
+		 * @param content the content of the table
+		 * The constructor to build the table
+		 */
+		public TableFragment(ArrayList<String> content) {
+			this.content = content;
 		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_beygingar,
+			View rootView = inflater.inflate(R.layout.table,
 					container, false);
+			setTableText(rootView);
 			return rootView;
+		}
+		
+		/**
+		 * @param view the view
+		 * Sets the text in the TextViews in the table
+		 */
+		private void setTableText(View view) {
+			int index = 0;
+			for(int row=0; row < 4; row++) {
+				   for(int col = 0; col < 2; col++) {
+				    String cellID = "cell" + row + col;
+				    int resID = getResources().getIdentifier(cellID, "id", "com.example.beygdu");
+				    ((TextView) view.findViewById(resID)).setText(content.get(index));
+				    index++;
+				   }
+			}
 		}
 	}
 }

@@ -26,14 +26,13 @@
         android:layout_width="fill_parent"
         android:layout_height="50dp"
         android:layout_below="@+id/title"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:layout_marginBottom="10dp"
-
         android:background="@drawable/border"
         android:ems="10"
         android:hint="@string/searchInput"
-        android:inputType="number|text"
+        android:inputType="text"
         android:paddingLeft="40dp" >
 
         <requestFocus />
