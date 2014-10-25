@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,34 +11,38 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 /**
  * @author jfj1
- * @since 10.10.14
- * @version 1
+ * @since 25.10.14
+ * @version 0.2
  *
  */
 public class BeygingarActivity extends Activity {
 
-	private ArrayList<String> searchResults;
+	TableLayout tables;
+	private ArrayList<String> searchResults;	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.activity_beygingar);
 		
-		//Get the message from the intent
 		Intent intent = getIntent();
 		searchResults = intent.getStringArrayListExtra("searchResults");
 		
-		
-		FragmentManager fm = getFragmentManager();
-		FragmentTransaction fragmentTransaction = fm.beginTransaction();
-		TableFragment table = new TableFragment(searchResults);
-		fragmentTransaction.add(R.id.tablefragments, table);
-		fragmentTransaction.commit();
-		
+		int numTables = searchResults.size() / 8;
+		tables = (TableLayout) findViewById(R.id.data_table);
+		ArrayList<String> tmp;
+		for (int j = 0; j < numTables; j++) {
+			tmp = new ArrayList<String>();
+			for (int i = 0; i < 8; i++){
+				tmp.add(searchResults.remove(0));				
+			}
+			getFragmentManager().beginTransaction().add(tables.getId(), TableFragment.newInstance(tmp), "table" + j).commit();
+		}		
 	}
 	
 	@Override
@@ -68,13 +70,7 @@ public class BeygingarActivity extends Activity {
 	public static class TableFragment extends Fragment {
 
 		ArrayList<String> content;
-		
-		/**
-		 * Needs to have an empty constructor
-		 */
-		public TableFragment(){
-		}
-		
+				
 		/**
 		 * @param content the content of the table
 		 * The constructor to build the table
@@ -82,6 +78,11 @@ public class BeygingarActivity extends Activity {
 		public TableFragment(ArrayList<String> content) {
 			this.content = content;
 		}
+		
+		public static TableFragment newInstance(ArrayList<String> content) {
+	        TableFragment f = new TableFragment(content);;
+	        return f;
+	    }
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,5 +108,6 @@ public class BeygingarActivity extends Activity {
 				   }
 			}
 		}
+		
 	}
 }

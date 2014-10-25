@@ -41,16 +41,15 @@ public final class R {
         public static final int cell30=0x7f09000b;
         public static final int cell31=0x7f09000c;
         public static final int commitSearch=0x7f090003;
+        public static final int data_table=0x7f090000;
         public static final int mainSearch=0x7f090002;
-        public static final int tablefragments=0x7f090000;
         public static final int tablelayout=0x7f090004;
         public static final int title=0x7f090001;
     }
     public static final class layout {
         public static final int activity_beygingar=0x7f030000;
         public static final int activity_main=0x7f030001;
-        public static final int fragment_beygingar=0x7f030002;
-        public static final int table=0x7f030003;
+        public static final int table=0x7f030002;
     }
     public static final class menu {
         public static final int beygingar=0x7f080000;

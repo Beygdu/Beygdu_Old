@@ -13,8 +13,8 @@ import android.widget.Toast;
 
 /**
  * @author jfj1
- * @version 1
  * @since 09.10.14
+ * @version 0.1
  */
 public class MainActivity extends Activity {
 
@@ -58,7 +58,6 @@ public class MainActivity extends Activity {
 		
 		//Get word from editText and
 		// TODO Here the SQL query could be made and called:
-		// TODO make sure it is only one word.
 		EditText editText = (EditText) findViewById(R.id.mainSearch);
 		String word = editText.getText().toString();
 		if(word.contains(" ")){
@@ -75,6 +74,24 @@ public class MainActivity extends Activity {
 			searchResults.add(word);
 			searchResults.add(word);
 			searchResults.add(word);
+
+			searchResults.add(word +"d");
+			searchResults.add(word +"d");
+			searchResults.add(word +"d");
+			searchResults.add(word +"d");
+			searchResults.add(word +"d");
+			searchResults.add(word +"d");
+			searchResults.add(word +"d");
+			searchResults.add(word +"d");
+			
+			searchResults.add(word +"f");
+			searchResults.add(word +"f");
+			searchResults.add(word +"f");
+			searchResults.add(word +"f");
+			searchResults.add(word +"f");
+			searchResults.add(word +"f");
+			searchResults.add(word +"f");
+			searchResults.add(word +"f");
 		
 			intent.putStringArrayListExtra("searchResults", (ArrayList<String>) searchResults);
 			startActivity(intent);
