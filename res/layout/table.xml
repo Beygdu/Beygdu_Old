@@ -35,7 +35,7 @@
     <TableRow
         style="@style/BodyRow"
         android:background="@drawable/tableborder" >
-
+    
         <TextView
             style="@style/BodyText"
             android:layout_weight="0.2"
@@ -43,7 +43,6 @@
             android:gravity="center"
             android:padding="10dip"
             android:width="0px" />
-
         <TextView
             style="@style/BodyText"
             android:layout_weight="0.4"
@@ -52,7 +51,6 @@
             android:padding="10dip"
             android:text="@string/a_gr"
             android:width="0px" />
-
         <TextView
             style="@style/BodyText"
             android:layout_weight="0.4"
@@ -79,7 +77,6 @@
             android:padding="7dp"
             android:text="@string/nf"
             android:width="0px" />
-
         <TextView
             android:id="@+id/cell00"
             style="@style/BodyText"
@@ -90,7 +87,6 @@
             android:text="Cell 0,0"
             android:textColor="@color/navy"
             android:width="0px" />
-
         <TextView
             android:id="@+id/cell01"
             style="@style/BodyText"
@@ -118,7 +114,6 @@
             android:padding="7dp"
             android:text="@string/tf"
             android:width="0px" />
-
         <TextView
             android:id="@+id/cell10"
             style="@style/BodyText"
@@ -129,7 +124,6 @@
             android:text="Cell 1,0"
             android:textColor="@color/navy"
             android:width="0px" />
-
         <TextView
             android:id="@+id/cell11"
             style="@style/BodyText"
@@ -157,7 +151,6 @@
             android:padding="7dp"
             android:text="@string/tgf"
             android:width="0px" />
-
         <TextView
             android:id="@+id/cell20"
             style="@style/BodyText"
@@ -168,7 +161,6 @@
             android:text="Cell 2,0"
             android:textColor="@color/navy"
             android:width="0px" />
-
         <TextView
             android:id="@+id/cell21"
             style="@style/BodyText"
@@ -196,7 +188,6 @@
             android:padding="7dp"
             android:text="@string/ef"
             android:width="0px" />
-
         <TextView
             android:id="@+id/cell30"
             style="@style/BodyText"
@@ -207,7 +198,6 @@
             android:text="Cell 3,0"
             android:textColor="@color/navy"
             android:width="0px" />
-
         <TextView
             android:id="@+id/cell31"
             style="@style/BodyText"
@@ -219,5 +209,5 @@
             android:textColor="@color/navy"
             android:width="0px" />
     </TableRow>
-
+    
 </TableLayout>
