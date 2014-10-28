@@ -1,7 +1,6 @@
 package com.example.beygdu;
 
 import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,16 +35,27 @@ public class MainActivity extends Activity {
 		return true;
 	}
 
+	//Notkun:onOptionsItemSelected(MenuItem item);
+	//Fyrir:
+	//Eftir:Sér um klikk fyrir önnur activity
+	/**
+	 * @return item 
+	 * @param MenuItem item
+	 * 
+	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
+		switch (item.getItemId()) {
+			case R.id.about:
+				Intent intent1 = new Intent(this, AboutActivity.class);
+				startActivity(intent1);
+				break;
+			case R.id.tabs:
+				Intent intent2 = new Intent(this, JsonActivity.class);
+				startActivity(intent2);
+				break;
 		}
-		return super.onOptionsItemSelected(item);
+	    return super.onOptionsItemSelected(item);
 	}
 	
 	

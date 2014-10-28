@@ -8,6 +8,8 @@
         android:minSdkVersion="16"
         android:targetSdkVersion="19" />
 
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -30,6 +32,27 @@
             android:name=".TableTest"
             android:label="@string/title_activity_table_test" >
         </activity>
-    </application>
+        <activity
+            android:name=".AboutActivity"
+            android:label="@string/title_activity_about"
+            android:parentActivityName=".MainActivity" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.beygdu.MainActivity" />
+        </activity>
+        <!-- activity
+            android:name=".JsonActivity"
+            android:label="@string/title_activity_json" >
+        </activity-->
+        <activity
+		      android:name=".JsonActivity"
+		      android:label="@string/app_name" >
+		      <intent-filter>
+		         <action android:name="android.intent.action.MAIN" />
+		
+		         <category android:name="android.intent.category.LAUNCHER" />
+		      </intent-filter>
+		   </activity>
+     </application>
 
 </manifest>
