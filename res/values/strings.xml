@@ -26,7 +26,16 @@
     <string name="tf">Þf.</string>
     <string name="tgf">Þgf.</string>
     <string name="ef">Ef.</string>
-
+	
+    <string name="fyrsta_pers">1.pers</string>
+    <string name="onnur_pers">2.pers</string>
+    <string name="thridja_pers">3.pers</string>
+    
+    <string name="lo_kk">KK</string>
+    <string name="lo_kvk">KVK</string>
+    <string name="lo_hk">HK</string>
+    
+    
     <!-- json test -->
     <string name="title_activity_json">title_activity_json</string>
     <string name="jsontest">jsontest</string>

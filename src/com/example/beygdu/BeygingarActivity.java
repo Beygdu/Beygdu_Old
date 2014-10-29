@@ -87,7 +87,7 @@ public class BeygingarActivity extends Activity {
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.table,
+			View rootView = inflater.inflate(R.layout.table_no,
 					container, false);
 			setTableText(rootView);
 			return rootView;

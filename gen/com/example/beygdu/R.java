@@ -36,35 +36,45 @@ public final class R {
         public static final int tableborder=0x7f020004;
     }
     public static final class id {
-        public static final int about=0x7f09001c;
+        public static final int about=0x7f090026;
         public static final int aboutText=0x7f09000b;
         public static final int aboutTitle=0x7f09000a;
-        public static final int action_settings=0x7f09001b;
+        public static final int action_settings=0x7f090025;
         public static final int button1=0x7f090003;
         public static final int cell00=0x7f090010;
         public static final int cell01=0x7f090011;
-        public static final int cell10=0x7f090013;
-        public static final int cell11=0x7f090014;
-        public static final int cell20=0x7f090016;
-        public static final int cell21=0x7f090017;
-        public static final int cell30=0x7f090019;
-        public static final int cell31=0x7f09001a;
+        public static final int cell011=0x7f090014;
+        public static final int cell02=0x7f090012;
+        public static final int cell10=0x7f090020;
+        public static final int cell11=0x7f090015;
+        public static final int cell12=0x7f090016;
+        public static final int cell20=0x7f090018;
+        public static final int cell21=0x7f090019;
+        public static final int cell22=0x7f09001a;
+        public static final int cell30=0x7f09001c;
+        public static final int cell31=0x7f09001d;
+        public static final int cell32=0x7f09001e;
         public static final int commitSearch=0x7f090009;
         public static final int container=0x7f090000;
         public static final int data_table=0x7f090001;
         public static final int editText1=0x7f090005;
         public static final int editText2=0x7f090004;
-        public static final int ef=0x7f090018;
+        public static final int ef=0x7f09001b;
         public static final int eintala=0x7f09000e;
         public static final int mainSearch=0x7f090008;
         public static final int nf=0x7f09000f;
+        public static final int pers1=0x7f090022;
+        public static final int pers2=0x7f090023;
+        public static final int pers3=0x7f090024;
         public static final int tableTitle=0x7f09000d;
-        public static final int tablelayout=0x7f09000c;
-        public static final int tabs=0x7f09001d;
+        public static final int table_lo=0x7f09000c;
+        public static final int table_no=0x7f09001f;
+        public static final int table_so=0x7f090021;
+        public static final int tabs=0x7f090027;
         public static final int textView1=0x7f090002;
         public static final int textView2=0x7f090006;
-        public static final int tf=0x7f090012;
-        public static final int tgf=0x7f090015;
+        public static final int tf=0x7f090013;
+        public static final int tgf=0x7f090017;
         public static final int title=0x7f090007;
     }
     public static final class layout {
@@ -74,7 +84,9 @@ public final class R {
         public static final int activity_main=0x7f030003;
         public static final int fragment_about=0x7f030004;
         public static final int fragment_json=0x7f030005;
-        public static final int table=0x7f030006;
+        public static final int table_lo=0x7f030006;
+        public static final int table_no=0x7f030007;
+        public static final int table_so=0x7f030008;
     }
     public static final class menu {
         public static final int about=0x7f080000;
@@ -90,33 +102,39 @@ public final class R {
         public static final int action_settings=0x7f060002;
         public static final int app_name=0x7f060000;
         public static final int buttonSearch=0x7f060008;
-        public static final int country=0x7f060019;
+        public static final int country=0x7f06001f;
         public static final int ef=0x7f060014;
         public static final int eintala=0x7f06000d;
         public static final int fleirtala=0x7f06000e;
+        public static final int fyrsta_pers=0x7f060015;
         public static final int hello_world=0x7f060001;
-        public static final int humidity=0x7f06001b;
-        public static final int jsontest=0x7f060016;
-        public static final int location=0x7f060018;
+        public static final int humidity=0x7f060021;
+        public static final int jsontest=0x7f06001c;
+        public static final int lo_hk=0x7f06001a;
+        public static final int lo_kk=0x7f060018;
+        public static final int lo_kvk=0x7f060019;
+        public static final int location=0x7f06001e;
         public static final int m_gr=0x7f060010;
         public static final int nf=0x7f060011;
-        public static final int pressure=0x7f06001c;
+        public static final int onnur_pers=0x7f060016;
+        public static final int pressure=0x7f060022;
         public static final int searchInput=0x7f060007;
         /**  Table activity strings 
          */
         public static final int tableTitle=0x7f06000c;
-        public static final int temperature=0x7f06001a;
+        public static final int temperature=0x7f060020;
         public static final int tf=0x7f060012;
         public static final int tgf=0x7f060013;
+        public static final int thridja_pers=0x7f060017;
         public static final int title=0x7f060004;
         public static final int title_activity_about=0x7f06000b;
         public static final int title_activity_beygingar=0x7f060009;
-        public static final int title_activity_handle_xml=0x7f060017;
+        public static final int title_activity_handle_xml=0x7f06001d;
         /**  json test 
          */
-        public static final int title_activity_json=0x7f060015;
+        public static final int title_activity_json=0x7f06001b;
         public static final int title_activity_table_test=0x7f06000a;
-        public static final int weather=0x7f06001d;
+        public static final int weather=0x7f060023;
     }
     public static final class style {
         /** 
