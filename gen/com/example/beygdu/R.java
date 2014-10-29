@@ -51,6 +51,7 @@ public final class R {
         public static final int cell31=0x7f09001a;
         public static final int commitSearch=0x7f090009;
         public static final int container=0x7f090000;
+        public static final int data_table=0x7f090001;
         public static final int editText1=0x7f090005;
         public static final int editText2=0x7f090004;
         public static final int ef=0x7f090018;
@@ -58,7 +59,6 @@ public final class R {
         public static final int mainSearch=0x7f090008;
         public static final int nf=0x7f09000f;
         public static final int tableTitle=0x7f09000d;
-        public static final int tablefragments=0x7f090001;
         public static final int tablelayout=0x7f09000c;
         public static final int tabs=0x7f09001d;
         public static final int textView1=0x7f090002;
