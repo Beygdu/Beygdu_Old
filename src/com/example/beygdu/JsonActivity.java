@@ -1,17 +1,16 @@
 package com.example.beygdu;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
-import android.os.Build;
 
+/**
+ *
+ * @version $Id:  $
+ */
 public class JsonActivity extends Activity {
 	private String url1 = "http://api.openweathermap.org/data/2.5/weather?q=";
 	private EditText location,country;
@@ -31,7 +30,10 @@ public class JsonActivity extends Activity {
 	      return true;
 	   }
 
-	   public void open(View view){
+	   /**
+	 * @param view
+	 */
+	public void open(View view){
 	      String url = location.getText().toString();
 	      String finalUrl = url1 + url;
 	      country.setText(finalUrl);
@@ -43,8 +45,6 @@ public class JsonActivity extends Activity {
 
 	   }
 
-
-
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -55,22 +55,5 @@ public class JsonActivity extends Activity {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
-	}
-
-	/**
-	 * A placeholder fragment containing a simple view.
-	 */
-	public static class PlaceholderFragment extends Fragment {
-
-		public PlaceholderFragment() {
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_json, container,
-					false);
-			return rootView;
-		}
 	}
 }

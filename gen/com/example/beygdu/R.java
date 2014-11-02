@@ -100,41 +100,46 @@ public final class R {
         public static final int aboutText=0x7f060006;
         public static final int aboutTitle=0x7f060005;
         public static final int action_settings=0x7f060002;
+        public static final int afram=0x7f06001c;
         public static final int app_name=0x7f060000;
         public static final int buttonSearch=0x7f060008;
-        public static final int country=0x7f06001f;
+        public static final int cancel=0x7f06001d;
+        /**  Dialog 
+         */
+        public static final int choosedialog=0x7f06001b;
+        public static final int country=0x7f060022;
         public static final int ef=0x7f060014;
         public static final int eintala=0x7f06000d;
         public static final int fleirtala=0x7f06000e;
         public static final int fyrsta_pers=0x7f060015;
         public static final int hello_world=0x7f060001;
-        public static final int humidity=0x7f060021;
-        public static final int jsontest=0x7f06001c;
+        public static final int humidity=0x7f060024;
+        public static final int jsontest=0x7f06001f;
         public static final int lo_hk=0x7f06001a;
         public static final int lo_kk=0x7f060018;
         public static final int lo_kvk=0x7f060019;
-        public static final int location=0x7f06001e;
+        public static final int location=0x7f060021;
         public static final int m_gr=0x7f060010;
         public static final int nf=0x7f060011;
         public static final int onnur_pers=0x7f060016;
-        public static final int pressure=0x7f060022;
+        public static final int pressure=0x7f060025;
         public static final int searchInput=0x7f060007;
         /**  Table activity strings 
          */
         public static final int tableTitle=0x7f06000c;
-        public static final int temperature=0x7f060020;
+        public static final int temperature=0x7f060023;
         public static final int tf=0x7f060012;
         public static final int tgf=0x7f060013;
         public static final int thridja_pers=0x7f060017;
         public static final int title=0x7f060004;
         public static final int title_activity_about=0x7f06000b;
         public static final int title_activity_beygingar=0x7f060009;
-        public static final int title_activity_handle_xml=0x7f06001d;
+        public static final int title_activity_handle_xml=0x7f060020;
         /**  json test 
          */
-        public static final int title_activity_json=0x7f06001b;
+        public static final int title_activity_json=0x7f06001e;
         public static final int title_activity_table_test=0x7f06000a;
-        public static final int weather=0x7f060023;
+        public static final int weather=0x7f060026;
     }
     public static final class style {
         /** 

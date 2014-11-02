@@ -35,6 +35,10 @@
     <string name="lo_kvk">KVK</string>
     <string name="lo_hk">HK</string>
     
+    <!-- Dialog -->
+    <string name="choosedialog">Smelltu á það orð sem þú vilt sjá: </string>
+    <string name="afram">Áfram</string>
+    <string name="cancel">Hætta við</string>
     
     <!-- json test -->
     <string name="title_activity_json">title_activity_json</string>
