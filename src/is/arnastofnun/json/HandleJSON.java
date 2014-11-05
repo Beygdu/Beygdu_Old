@@ -1,4 +1,4 @@
-package com.example.beygdu;
+package is.arnastofnun.json;
 
 import java.io.IOException;
 import java.io.InputStream;

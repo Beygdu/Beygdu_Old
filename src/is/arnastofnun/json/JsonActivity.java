@@ -1,4 +1,6 @@
-package com.example.beygdu;
+package is.arnastofnun.json;
+
+import com.example.beygdu.R;
 
 import android.app.Activity;
 import android.os.Bundle;

@@ -1,4 +1,4 @@
-package com.example.beygdu;
+package is.arnastofnun.parser;
 import java.io.Serializable;
 import java.util.*;
 

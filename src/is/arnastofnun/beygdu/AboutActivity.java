@@ -1,7 +1,8 @@
-package com.example.beygdu;
+package is.arnastofnun.beygdu;
+
+import com.example.beygdu.R;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,8 +10,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
 
+/**
+ * @author Snær Seljan
+ * @since 31.10.14
+ * @version $Id:  0.1
+ */
 public class AboutActivity extends Activity {
 
 	@Override
@@ -45,6 +50,9 @@ public class AboutActivity extends Activity {
 	 */
 	public static class PlaceholderFragment extends Fragment {
 
+		/**
+		 * Not used
+		 */
 		public PlaceholderFragment() {
 		}
 

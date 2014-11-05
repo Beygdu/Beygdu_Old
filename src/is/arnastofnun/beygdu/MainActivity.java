@@ -1,6 +1,11 @@
-package com.example.beygdu;
+package is.arnastofnun.beygdu;
+
+import is.arnastofnun.json.JsonActivity;
+import is.arnastofnun.parser.HTMLParser;
+import is.arnastofnun.parser.Nafnord;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
@@ -23,20 +28,22 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.beygdu.R;
+
 /**
- * @author jfj1
- * @since 09.10.14
- * @version 0.1
+ * @author Jón Friðrik, Arnar, Snær, Máni
+ * @since 05.11.14
+ * @version 0.2
  */
 public class MainActivity extends FragmentActivity {
 
 	/**
-	 * The result from the database search.
+	 * The result from the parser search.
 	 */
 	public ArrayList<String> results = new ArrayList<String>();
 
 	/**
-	 * @param results
+	 * @param result setur results inní tilviksbreytu klasans.
 	 */
 	public void setOrd(ArrayList<String> results) {
 		this.results = results;
@@ -50,22 +57,15 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		//getMenuInflater().inflate(R.menu.main, menu);
-		//return true;
 	    // Inflate the menu items for use in the action bar
 	    MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.main, menu);
 	    return super.onCreateOptionsMenu(menu);
 	}
 	
-	
-	//Notkun:onOptionsItemSelected(MenuItem item);
-	//Fyrir:
-	//Eftir:S�r um klikk fyrir �nnur activity
 	/**
 	 * @return item 
-	 * 
+	 *  switch fyrir möguleika í ActionBar glugga. 
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -74,16 +74,23 @@ public class MainActivity extends FragmentActivity {
 			Intent intent1 = new Intent(this, AboutActivity.class);
 			startActivity(intent1);
 			break;
-		case R.id.tabs:
-			Intent intent2 = new Intent(this, JsonActivity.class);
-			startActivity(intent2);
-			break;
+			
+			//JSON test
+//		case R.id.tabs:
+//			Intent intent2 = new Intent(this, JsonActivity.class);
+//			startActivity(intent2);
+//			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
 
 
 	/**
+	 * @param view the view points to this activity. 
+	 * Keyrist þegar notandi ýtir á leita takkann.
+	 * Býr til nýjan þráð sem sér um að ná í beygingarmynd þess orðs sem var slegið inn.
+	 * Ef ekkert eða fleirri en eitt orð var slegið inn fær notandinn áminningu.
+	 * 
 	 */
 	public void btnOnClick(View view){
 		EditText editText = (EditText) findViewById(R.id.mainSearch);
@@ -119,7 +126,8 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	/**
-	 *
+	 * @author Jón Friðrik
+	 * @since 23.10.14
 	 * @version 0.1
 	 */
 	public class WordChooserDialogFragment extends DialogFragment {
@@ -129,6 +137,9 @@ public class MainActivity extends FragmentActivity {
 
 
 		/**
+		 *  Smiður fyrir WordChooserDialog.
+		 *  Dialog þar sem notandi getur valið um leitarniðurstöður.
+		 *  Einungis hægt að velja eitt orð.
 		 *  
 		 */
 		public WordChooserDialogFragment() {
@@ -154,7 +165,6 @@ public class MainActivity extends FragmentActivity {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					selectedItem = results.get(which+1);
-					System.out.println("id: " + selectedItem.split("- ")[1]);
 				}
 			});
 
@@ -175,15 +185,31 @@ public class MainActivity extends FragmentActivity {
 		}	
 	}
 
+	
+	/**
+	 * 
+	 * @author Arnar, Jón Friðrik
+	 * @since 23.10.14
+	 * @version 0.2
+	 * 
+	 */
 	private class ParseThread extends AsyncTask<Void, Void, Void> {
 		HTMLParser parser;
-		final String url;
+		String url;
 		
+		/**
+		 * 
+		 * @param searchWord
+		 */
 		public ParseThread(String searchWord) {
 			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?q=";
 			url = baseURL + searchWord;
 		}
 		
+		/**
+		 * 
+		 * @param searchId
+		 */
 		public ParseThread(int searchId) {
 			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?id=";
 			url = baseURL + searchId;
@@ -198,6 +224,9 @@ public class MainActivity extends FragmentActivity {
 		protected Void doInBackground(Void... args) {
 			Document doc;
 			try {
+				//url = java.net.URLDecoder.decode(url, "UTF-8");
+				//url = Charset.forName("UTF-8").encode(url);
+				//System.out.println(url);
 				doc = Jsoup.connect(url).get();
 				parser = new HTMLParser(doc);
 			} catch (IOException e) {

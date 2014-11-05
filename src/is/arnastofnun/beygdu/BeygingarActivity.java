@@ -1,6 +1,10 @@
-package com.example.beygdu;
+package is.arnastofnun.beygdu;
+
+import is.arnastofnun.parser.Nafnord;
 
 import java.util.ArrayList;
+
+import com.example.beygdu.R;
 
 import android.app.Activity;
 import android.app.Fragment;
