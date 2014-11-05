@@ -23,7 +23,8 @@ import android.widget.TextView;
 public class BeygingarActivity extends Activity {
 
 	TableLayout tables;
-	private ArrayList<String> searchResults;	
+	private ArrayList<String> searchResults;
+	private Nafnord no = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +32,14 @@ public class BeygingarActivity extends Activity {
 		setContentView(R.layout.activity_beygingar);
 		
 		Intent intent = getIntent();
-		searchResults = intent.getStringArrayListExtra("searchResults");
-		
-		int numTables = searchResults.size() / 8;
+		no = (Nafnord) intent.getSerializableExtra("NO");				
 		tables = (TableLayout) findViewById(R.id.data_table);
-		ArrayList<String> tmp;
-		
-		for (int j = 0; j < numTables; j++) {
-			tmp = new ArrayList<String>();
-			for (int i = 0; i < 8; i++){
-				tmp.add(searchResults.remove(0));				
-			}
-			getFragmentManager().beginTransaction().add(tables.getId(), TableFragment.newInstance(tmp), "table" + j).commit();
-		}		
+		TextView titleDesc = (TextView) findViewById(R.id.tableTitle);
+		titleDesc.setText(no.getEintala().get(0));
+		getFragmentManager().beginTransaction().add(tables.getId(), TableFragment.newInstance(no.getEintala(), "Eintala"), 
+													"table1").commit();
+		getFragmentManager().beginTransaction().add(tables.getId(), TableFragment.newInstance(no.getFleirtala(), "Fleirtala"), 
+													"table2").commit();	
 	}
 	
 	@Override
@@ -68,18 +64,20 @@ public class BeygingarActivity extends Activity {
 	 */
 	public static class TableFragment extends Fragment {
 
-		ArrayList<String> content;
+		private ArrayList<String> content;
+		private String description;
 				
 		/**
 		 * @param content the content of the table
 		 * The constructor to build the table
 		 */
-		public TableFragment(ArrayList<String> content) {
+		public TableFragment(ArrayList<String> content, String description) {
 			this.content = content;
+			this.description = description;
 		}
 		
-		public static TableFragment newInstance(ArrayList<String> content) {
-	        TableFragment f = new TableFragment(content);;
+		public static TableFragment newInstance(ArrayList<String> content, String description) {
+	        TableFragment f = new TableFragment(content, description);
 	        return f;
 	    }
 
@@ -97,6 +95,8 @@ public class BeygingarActivity extends Activity {
 		 * Sets the text in the TextViews in the table
 		 */
 		private void setTableText(View view) {
+			int desID = getResources().getIdentifier("description", "id", "com.example.beygdu");
+			((TextView) view.findViewById(desID)).setText(description);
 			int index = 0;
 			for(int row=0; row < 4; row++) {
 				   for(int col = 0; col < 2; col++) {

@@ -35,6 +35,9 @@ public class MainActivity extends FragmentActivity {
 	 */
 	public ArrayList<String> results = new ArrayList<String>();
 
+	/**
+	 * @param results
+	 */
 	public void setOrd(ArrayList<String> results) {
 		this.results = results;
 	}
@@ -88,6 +91,9 @@ public class MainActivity extends FragmentActivity {
 		if(word.contains(" ")){
 			Toast.makeText(this, "Einingis hægt að leita að einu orði í einu", Toast.LENGTH_SHORT).show();
 		}
+		if(word.isEmpty()){
+			Toast.makeText(this, "Vinsamlegasta sláið inn orð í reitinn hér að ofan", Toast.LENGTH_SHORT).show();
+		}
 		//New Thread to get word
 		new ParseThread(word).execute();
 	}
@@ -98,16 +104,17 @@ public class MainActivity extends FragmentActivity {
 			DialogFragment newFragment = new WordChooserDialogFragment();
 			newFragment.show(fM, "wordChooserFragment");
 		} else if(results.get(0).equalsIgnoreCase("criticalHit")){
-			results.remove(0);
-			createNewActivity();
+			//TODO: Tímabundið þar til við búum fleirri klasa fyrir aðra orðflokka
+			Nafnord no = new Nafnord(results);
+			createNewActivity(no);
 		} else {
 			Toast.makeText(this, "Engin leitarniðurstaða", Toast.LENGTH_SHORT).show();
 		}
 	}
 
-	private void createNewActivity() {
+	private void createNewActivity(Nafnord no) {
 		Intent intent = new Intent(this, BeygingarActivity.class);
-		intent.putStringArrayListExtra("searchResults", (ArrayList<String>) results);
+		intent.putExtra("NO", no);
 		startActivity(intent);
 	}
 
@@ -189,7 +196,6 @@ public class MainActivity extends FragmentActivity {
 
 		@Override
 		protected Void doInBackground(Void... args) {
-//			gW.searchURL(search);
 			Document doc;
 			try {
 				doc = Jsoup.connect(url).get();

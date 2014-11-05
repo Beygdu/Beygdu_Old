@@ -1,8 +1,8 @@
 package com.example.beygdu;
+import java.io.Serializable;
 import java.util.*;
-import java.util.ArrayList;
 
-public class Nafnord {
+public class Nafnord implements Serializable {
 
     ArrayList<String> Eintala;
     ArrayList<String> Fleirtala;

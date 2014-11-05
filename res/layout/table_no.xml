@@ -7,26 +7,16 @@
 
     <!-- Leitarorð -->
 
-    <TextView
-        android:id="@+id/tableTitle"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:paddingLeft="20dp"
-        android:text="@string/tableTitle"
-        android:textColor="@color/black"
-        android:textSize="25sp" />
-
     <!-- Eintala/fleirtala -->
 
     <TextView
-        android:id="@+id/eintala"
+        android:id="@+id/description"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:background="@color/grey"
         android:padding="10dp"
         android:paddingLeft="20dp"
-        android:text="@string/eintala"
+        android:text="description"
         android:textColor="@color/black"
         android:textSize="20sp" />
 
