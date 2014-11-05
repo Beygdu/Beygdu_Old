@@ -36,6 +36,7 @@ public class BeygingarActivity extends Activity {
 		int numTables = searchResults.size() / 8;
 		tables = (TableLayout) findViewById(R.id.data_table);
 		ArrayList<String> tmp;
+		
 		for (int j = 0; j < numTables; j++) {
 			tmp = new ArrayList<String>();
 			for (int i = 0; i < 8; i++){

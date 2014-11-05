@@ -1,6 +1,11 @@
 package com.example.beygdu;
 
+import java.io.IOException;
 import java.util.ArrayList;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Whitelist;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -28,12 +33,10 @@ public class MainActivity extends FragmentActivity {
 	/**
 	 * The result from the database search.
 	 */
-	public static ArrayList<String> ord = new ArrayList<String>();
-	public static ArrayList<String> ordFlokkar = new ArrayList<String>();
-	public static ArrayList<String> beygingar = new ArrayList<String>();
+	public ArrayList<String> results = new ArrayList<String>();
 
-	public void setOrd(ArrayList<String> ord) {
-		this.ord = ord;
+	public void setOrd(ArrayList<String> results) {
+		this.results = results;
 	}
 
 	@Override
@@ -44,17 +47,12 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
 	}
-
-	//Notkun:onOptionsItemSelected(MenuItem item);
-	//Fyrir:
-	//Eftir:S�r um klikk fyrir �nnur activity
+	
 	/**
 	 * @return item 
-	 * @param MenuItem item
 	 * 
 	 */
 	@Override
@@ -74,8 +72,6 @@ public class MainActivity extends FragmentActivity {
 
 
 	/**
-	 * @param view the view
-	 * Fills the List with search results and makes Intent which is sent to new Activity.
 	 */
 	public void btnOnClick(View view){
 		EditText editText = (EditText) findViewById(R.id.mainSearch);
@@ -84,23 +80,25 @@ public class MainActivity extends FragmentActivity {
 			Toast.makeText(this, "Einingis hægt að leita að einu orði í einu", Toast.LENGTH_SHORT).show();
 		}
 		//New Thread to get word
-		new Parse("hestur").execute();
+		new ParseThread(word).execute();
 	}
 	
 	private void checkWordCount() {
-		if (ord.size() > 1) {
+		if (results.get(0).equalsIgnoreCase("partialHit")) {
 			FragmentManager fM = getSupportFragmentManager();
 			DialogFragment newFragment = new WordChooserDialogFragment();
 			newFragment.show(fM, "wordChooserFragment");
+		} else if(results.get(0).equalsIgnoreCase("criticalHit")){
+			results.remove(0);
+			createNewActivity();
 		} else {
-			//Load word
+			Toast.makeText(this, "Engin leitarniðurstaða", Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	private void createNewActivity() {
 		Intent intent = new Intent(this, BeygingarActivity.class);
-		beygingar = new ArrayList<String>();
-		intent.putStringArrayListExtra("searchResults", (ArrayList<String>) beygingar);
+		intent.putStringArrayListExtra("searchResults", (ArrayList<String>) results);
 		startActivity(intent);
 	}
 
@@ -108,7 +106,7 @@ public class MainActivity extends FragmentActivity {
 	 *
 	 * @version 0.1
 	 */
-	public static class WordChooserDialogFragment extends DialogFragment {
+	public class WordChooserDialogFragment extends DialogFragment {
 		private String selectedItem = null;
 		private Context mContext;
 		private CharSequence[] charArr;
@@ -123,9 +121,9 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		private void makeCharArr() {
-			charArr = new CharSequence[ord.size()-1];
-			for (int i = 0; i < ord.size()-1; i++){
-				charArr[i] = ord.get(i+1).substring(0, ord.get(i+1).indexOf("-"));
+			charArr = new CharSequence[results.size()-1];
+			for (int i = 0; i < results.size()-1; i++){
+				charArr[i] = results.get(i+1).substring(0, results.get(i+1).indexOf("-"));
 				//charArr[i] = ord.get(i);
 			}
 		}
@@ -139,14 +137,16 @@ public class MainActivity extends FragmentActivity {
 					new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					selectedItem = ord.get(which);
+					selectedItem = results.get(which+1);
+					System.out.println("id: " + selectedItem.split("- ")[1]);
 				}
 			});
 
 
 			builder.setPositiveButton(R.string.afram, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int id) {
-					// FIRE ZE MISSILES!
+					int wordId = Integer.parseInt(selectedItem.split("- ")[1]);
+					new ParseThread(wordId).execute();
 				}
 			});
 			builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -159,18 +159,19 @@ public class MainActivity extends FragmentActivity {
 		}	
 	}
 
-	private class Parse extends AsyncTask<Void, Void, Void> {
-
-		ArrayList<String> results;
-		String search;
-		GetWordDetails gW;
-
-		public Parse(String search) {
-			this.search = search;
-			this.results = new ArrayList<String>();
-			gW = new GetWordDetails(search);
+	private class ParseThread extends AsyncTask<Void, Void, Void> {
+		HTMLParser parser;
+		final String url;
+		
+		public ParseThread(String searchWord) {
+			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?q=";
+			url = baseURL + searchWord;
 		}
-
+		
+		public ParseThread(int searchId) {
+			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?id=";
+			url = baseURL + searchId;
+		}
 
 		@Override
 		protected void onPreExecute() {
@@ -179,13 +180,21 @@ public class MainActivity extends FragmentActivity {
 
 		@Override
 		protected Void doInBackground(Void... args) {
-			gW.searchURL(search);
+//			gW.searchURL(search);
+			Document doc;
+			try {
+				doc = Jsoup.connect(url).get();
+				parser = new HTMLParser(doc);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			return null;
 		}
 
 		@Override
 		protected void onPostExecute(Void args) {
-			setOrd(gW.getResults());
+			setOrd(parser.getResults());
 			checkWordCount();
 		}
 	}
