@@ -13,6 +13,7 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -45,10 +46,14 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
+		//getMenuInflater().inflate(R.menu.main, menu);
+		//return true;
+	    // Inflate the menu items for use in the action bar
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.main, menu);
+	    return super.onCreateOptionsMenu(menu);
 	}
-
+	
 	//Notkun:onOptionsItemSelected(MenuItem item);
 	//Fyrir:
 	//Eftir:S�r um klikk fyrir �nnur activity
@@ -84,7 +89,7 @@ public class MainActivity extends FragmentActivity {
 			Toast.makeText(this, "Einingis hægt að leita að einu orði í einu", Toast.LENGTH_SHORT).show();
 		}
 		//New Thread to get word
-		new Parse("hestur").execute();
+		new Parse(word).execute();
 	}
 	
 	private void checkWordCount() {
@@ -93,7 +98,7 @@ public class MainActivity extends FragmentActivity {
 			DialogFragment newFragment = new WordChooserDialogFragment();
 			newFragment.show(fM, "wordChooserFragment");
 		} else {
-			//Load word
+			createNewActivity();
 		}
 	}
 
