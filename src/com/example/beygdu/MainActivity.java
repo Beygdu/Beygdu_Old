@@ -51,6 +51,10 @@ public class MainActivity extends FragmentActivity {
 		return true;
 	}
 	
+	
+	//Notkun:onOptionsItemSelected(MenuItem item);
+	//Fyrir:
+	//Eftir:S�r um klikk fyrir �nnur activity
 	/**
 	 * @return item 
 	 * 
