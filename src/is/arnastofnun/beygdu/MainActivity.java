@@ -1,11 +1,9 @@
 package is.arnastofnun.beygdu;
 
-import is.arnastofnun.json.JsonActivity;
 import is.arnastofnun.parser.HTMLParser;
 import is.arnastofnun.parser.Nafnord;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
@@ -13,7 +11,6 @@ import org.jsoup.nodes.Document;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -34,6 +31,10 @@ import com.example.beygdu.R;
  * @author Jón Friðrik, Arnar, Snær, Máni
  * @since 05.11.14
  * @version 0.2
+ * 
+ * Fyrsti skjárinn í forritinu. Inniheldur innsláttarsvæði og takka fyrir leit.
+ * Inniheldur einnig actionbar þar sem notandinn getur opnað önnur activity eins og AboutActivity.
+ * 
  */
 public class MainActivity extends FragmentActivity {
 
@@ -43,7 +44,7 @@ public class MainActivity extends FragmentActivity {
 	public ArrayList<String> results = new ArrayList<String>();
 
 	/**
-	 * @param result setur results inní tilviksbreytu klasans.
+	 * @param results setur results inní tilviksbreytu klasans.
 	 */
 	public void setOrd(ArrayList<String> results) {
 		this.results = results;
@@ -74,12 +75,6 @@ public class MainActivity extends FragmentActivity {
 			Intent intent1 = new Intent(this, AboutActivity.class);
 			startActivity(intent1);
 			break;
-			
-			//JSON test
-//		case R.id.tabs:
-//			Intent intent2 = new Intent(this, JsonActivity.class);
-//			startActivity(intent2);
-//			break;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -92,7 +87,7 @@ public class MainActivity extends FragmentActivity {
 	 * Ef ekkert eða fleirri en eitt orð var slegið inn fær notandinn áminningu.
 	 * 
 	 */
-	public void btnOnClick(View view){
+	public void btnOnClick(@SuppressWarnings("unused") View view){
 		EditText editText = (EditText) findViewById(R.id.mainSearch);
 		String word = editText.getText().toString();
 		if(word.contains(" ")){
@@ -105,6 +100,13 @@ public class MainActivity extends FragmentActivity {
 		new ParseThread(word).execute();
 	}
 	
+	/**
+	 * sér hvort results sé:
+	 * <strong>Partial hit: </strong> séu mörg orð með mismunandi merkingar, en eins skrifuð
+	 * <strong>Critical hit: </strong> orðið fundið og búið að fylla niðurstöðum í object.
+	 * Eða engin leitarniðurstaða.
+	 * 
+	 */
 	private void checkWordCount() {
 		if (results.get(0).equalsIgnoreCase("partialHit")) {
 			FragmentManager fM = getSupportFragmentManager();
@@ -129,24 +131,30 @@ public class MainActivity extends FragmentActivity {
 	 * @author Jón Friðrik
 	 * @since 23.10.14
 	 * @version 0.1
+	 * 
+	 * Úbýr Dialog þar sem notandinn þarf að velja <strong>eitt</strong> af þeim orðum sem eru í results Arraylistanum
+	 * eða fara tilbaka.
 	 */
 	public class WordChooserDialogFragment extends DialogFragment {
+		
+		/**
+		 * selectedItem - það stak sem er valið í Dialognum, fyrsta stikið á listanum ef ekkert er valið.
+		 */
 		private String selectedItem = null;
-		private Context mContext;
 		private CharSequence[] charArr;
-
 
 		/**
 		 *  Smiður fyrir WordChooserDialog.
 		 *  Dialog þar sem notandi getur valið um leitarniðurstöður.
 		 *  Einungis hægt að velja eitt orð.
-		 *  
 		 */
 		public WordChooserDialogFragment() {
-			mContext= getActivity();
 			makeCharArr();
 		}
 
+		/**
+		 * Breytir results ArrayListanum í CharSequence fylki
+		 */
 		private void makeCharArr() {
 			charArr = new CharSequence[results.size()-1];
 			for (int i = 0; i < results.size()-1; i++){
@@ -162,20 +170,32 @@ public class MainActivity extends FragmentActivity {
 
 			builder.setSingleChoiceItems(charArr, -1 , 
 					new DialogInterface.OnClickListener() {
+				/**
+				 * listener hlustar á það atriði sem notandinn velur í dialognum
+				 */
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					selectedItem = results.get(which+1);
 				}
 			});
 
-
 			builder.setPositiveButton(R.string.afram, new DialogInterface.OnClickListener() {
+				/**
+				 * listener hlustar á ef notandinn ýtir á afram takkann
+				 */
 				public void onClick(DialogInterface dialog, int id) {
-					int wordId = Integer.parseInt(selectedItem.split("- ")[1]);
-					new ParseThread(wordId).execute();
+					if( selectedItem != null) {
+						int wordId = Integer.parseInt(selectedItem.split("- ")[1]);
+						new ParseThread(wordId).execute();
+					} else {
+						//TODO: make clever error handling here:Toast.makeText(mContext, "Vinsamlegast veljið orð", Toast.LENGTH_SHORT).show();
+					}
 				}
 			});
 			builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+				/**
+				 * listener hlustar á ef notandi ýtir á cancel takka, engin virkni þar sem hún er óþörf
+				 */
 				public void onClick(DialogInterface dialog, int id) {
 					// User cancelled the dialog
 				}
@@ -184,7 +204,6 @@ public class MainActivity extends FragmentActivity {
 			return builder.create();
 		}	
 	}
-
 	
 	/**
 	 * 
@@ -194,12 +213,16 @@ public class MainActivity extends FragmentActivity {
 	 * 
 	 */
 	private class ParseThread extends AsyncTask<Void, Void, Void> {
-		HTMLParser parser;
-		String url;
+		/**
+		 * parser - parserinn sem er búinn til að til ná í gögnin
+		 * url - urlinn sem parserinn notar. 
+		 */
+		private HTMLParser parser;
+		private String url;
 		
 		/**
 		 * 
-		 * @param searchWord
+		 * @param searchWord -strengurinn sem á að skeita aftast á urlinn
 		 */
 		public ParseThread(String searchWord) {
 			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?q=";
@@ -207,8 +230,7 @@ public class MainActivity extends FragmentActivity {
 		}
 		
 		/**
-		 * 
-		 * @param searchId
+		 * @param searchId - heiltalan sem á að skeita aftast á urlinn.
 		 */
 		public ParseThread(int searchId) {
 			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?id=";
@@ -220,13 +242,13 @@ public class MainActivity extends FragmentActivity {
 			super.onPreExecute();
 		}
 
+		/**
+		 * fallið sem þráðurinn keyrir eftir að hann er smíðaður. 
+		 */
 		@Override
 		protected Void doInBackground(Void... args) {
 			Document doc;
 			try {
-				//url = java.net.URLDecoder.decode(url, "UTF-8");
-				//url = Charset.forName("UTF-8").encode(url);
-				//System.out.println(url);
 				doc = Jsoup.connect(url).get();
 				parser = new HTMLParser(doc);
 			} catch (IOException e) {
@@ -235,7 +257,9 @@ public class MainActivity extends FragmentActivity {
 			}
 			return null;
 		}
-
+		/**
+		 * Fallið sem þráðurinn keyrir þegar hann er búinn að keyra doInBackground
+		 */
 		@Override
 		protected void onPostExecute(Void args) {
 			setOrd(parser.getResults());

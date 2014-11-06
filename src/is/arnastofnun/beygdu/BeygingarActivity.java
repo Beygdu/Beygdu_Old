@@ -19,15 +19,19 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 /**
- * @author jfj1
+ * @author Jón Friðrik Jónatansson
  * @since 25.10.14
  * @version 0.2
  *
+ *BeygingarActivity inniheldur eitt TextView og eitt TableLayout. 
  */
 public class BeygingarActivity extends Activity {
 
-	TableLayout tables;
-	private ArrayList<String> searchResults;
+	/**
+	 * tables er tablelayout activitiesins, hér fara TableFragmentin.
+	 * no - er container fyrir Nafnorð. 
+	 */
+	private TableLayout tables;
 	private Nafnord no = null;
 	
 	@Override
@@ -53,6 +57,7 @@ public class BeygingarActivity extends Activity {
 		return true;
 	}
 
+	@SuppressWarnings("unused")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// Handle action bar item clicks here. The action bar will
@@ -64,15 +69,23 @@ public class BeygingarActivity extends Activity {
 	}
 
 	/**
+	 * @author Jón Friðrik Jónatansson
+	 * @since 20.10.14
+	 * @version 0.2
 	 * A placeholder fragment containing a simple view.
 	 */
 	public static class TableFragment extends Fragment {
 
+		/**
+		 * content er arraylisti af þeim strengjum, í réttri röð, sem eiga að birtast
+		 * description - er nafn töflunar.
+		 */
 		private ArrayList<String> content;
 		private String description;
 				
 		/**
 		 * @param content the content of the table
+		 * @param description the description of the table.
 		 * The constructor to build the table
 		 */
 		public TableFragment(ArrayList<String> content, String description) {
@@ -80,6 +93,7 @@ public class BeygingarActivity extends Activity {
 			this.description = description;
 		}
 		
+		@SuppressWarnings("javadoc")
 		public static TableFragment newInstance(ArrayList<String> content, String description) {
 	        TableFragment f = new TableFragment(content, description);
 	        return f;
