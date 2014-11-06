@@ -7,20 +7,40 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
- * @author Arnar
+ * @author Arnar Jónsson
+ * @since 19.10.14
  * @version 0.1
+ * Klasinn tekur inn jsoup Document sem innieldur
+ * HTML5 kóða frá sérstakri vefsíðu.
+ * Klasinn leitar af lykilorðum til að ná réttum niðurstöðum úr kóðanum.
+ * 
+ * Eins og er virkar hann bara fyrir nafnorð
+ * 
  */
 public class HTMLParser {
 	
+	/**
+	 * Strengir sem notaðir eru til að athuga hvort leit skilaði núll eða fleiri niðurstöðum
+	 */
 	private String criticalMiss = "criticalMiss";
 	private String partialMiss = "partialHit";
 	private String criticalHit = "criticalHit";
 	
+	
+	/**
+	 * Inniheldur upplýsingar úr HTML5 kóðanum sem sendur
+	 * var inn í klasan sem jsoup Document
+	 */
 	private ArrayList<String> results;
+	
+	/**
+	 * doc er staðvær breyta fyrir það jsoup Document sem sent var inn í klasann
+	 */
 	private final Document doc;
 	
 	/**
-	 * @param doc the incoming document
+	 * @param doc er jsoup Document sem inniheldur
+	 * HTML5 kóða sérstakrar vefsíðu
 	 */
 	public HTMLParser(Document doc) {
 		this.results = new ArrayList<String>();
@@ -28,10 +48,19 @@ public class HTMLParser {
 		constructUsableData();
 	}
 	
+	/**
+	 * @param a er strengur
+	 * @return skilar true ef strengurinn inniheldur punkt (".")
+	 */
 	private boolean isLegalNO(String a) {
 		return a.contains(".");
 	}
 	
+	
+	/**
+	 * Ef niðurstaða heyrir undir orflokkinn nafnorð þá sér fallið um að
+	 * týna beygingarmyndir út úr HTML5 kóðanum.
+	 */
 	private void parseNO() {
 		Element a = doc.body();
 	    Elements e = a.getElementsByTag("tr");
@@ -46,6 +75,12 @@ public class HTMLParser {
 	    }
 	}
 	
+	/**
+	 * Ef niðurstaða heyrir undir orflokkinn lýsingarorð þá sér fallið um að
+	 * týna beygingarmyndir út úr HTML5 kóðanum.
+	 * 
+	 * Fallið er ekki rétt
+	 */
 	private void parseLO() {
 		Element a = doc.body();
 	    Elements tr = a.getElementsByTag("tr");
@@ -61,6 +96,14 @@ public class HTMLParser {
 	    }
 	}
 	
+	/**
+	 * 
+	 * @param a er strengur
+	 * @return skilar true ef a er löglegur strengur sem niðurstöður
+	 * beygingarmynda fyrir sagnorð, false annars
+	 * 
+	 * Fallið virkar ekki rétt
+	 */
 	private boolean isLegalSO(String a) {
 		String[] illegal = { "pers", "Et. Ft.", "Nútíð", "Þátíð", "Eintala", "Fleirtala", "Germynd Miðmynd", "Karlkyn Kvenkyn Hvorugkyn" };
 	    
@@ -72,6 +115,13 @@ public class HTMLParser {
 	    return true;
 	}
 	
+	
+	/**
+	 * Ef niðurstaða heyrir undir orflokkinn sagnorð þá sér fallið um að
+	 * týna beygingarmyndir út úr HTML5 kóðanum.
+	 * 
+	 * Fallið er ekki rétt
+	 */
 	private void parseSO() {
 		Element a = doc.body();
 	    Elements tr = a.getElementsByTag("tr");
@@ -86,6 +136,11 @@ public class HTMLParser {
 	    }
 	}
 	
+	
+	/**
+	 * Ef niðurstaðan var nákvæmlega ein þá athugar fallið orðflokk niðurstöðunnar sem fundinn var
+	 * og kallar svo á viðeigandi föll svo hægt sé að fylla lista af viðeigandi niðurstöðum
+	 */
 	private void parseCriticalHit() {
 		
 		Element body = doc.body();
@@ -107,6 +162,11 @@ public class HTMLParser {
 		
 	}
 	
+	
+	/**
+	 * Ef fleiri en ein niðurstaða fannst þá fyllir fallið
+	 * út listann með viðeigandi gildum
+	 */
 	private void parsePartialHit() {
 		Element body = doc.body();
 		Elements e = body.getElementsByTag("li");
@@ -126,14 +186,30 @@ public class HTMLParser {
 		}
 	}
 	
+	
+	/**
+	 * 
+	 * @param e er ekki tómt jsoup Element
+	 * @return true ef fleiri en ein niðurstaða fannst
+	 */
 	private boolean multiHits(Element e) {
 		return e.toString().toLowerCase().contains("fundust. smelltu");
 	}
 	
+	/**
+	 * 
+	 * @param e er ekki tómt jsoup Element
+	 * @return true ef einhver niðustaða fannst
+	 */
 	private boolean found(Element e) {
 		return !e.toString().toLowerCase().contains(" fannst ekki.");
 	}
 	
+	
+	/**
+	 * Athugar hvað er rökfræðilega rétt næsta skref í greiningu HTML5 kóðans.
+	 * Þ.e. hvort niðurstaða eða niðurstöður voru fundnar
+	 */
 	private void constructUsableData() {
 		Element e = doc.body();		
 		if( found(e) ) {
@@ -153,6 +229,10 @@ public class HTMLParser {
 		}
 	}
 	
+	/**
+	 * @return lista yfir greiningu HTML5-kóðans sem
+	 * kom inn með jsoup Document-inu doc
+	 */
 	public ArrayList<String> getResults() {
 		return this.results;
 	}
