@@ -1,240 +1,199 @@
 package is.arnastofnun.parser;
 
+import java.util.*;
 import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
+import java.io.*;
+import java.io.IOException;
+
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-/**
- * @author Arnar Jónsson
- * @since 19.10.14
- * @version 0.1
- * Klasinn tekur inn jsoup Document sem innieldur
- * HTML5 kóða frá sérstakri vefsíðu.
- * Klasinn leitar af lykilorðum til að ná réttum niðurstöðum úr kóðanum.
- * 
- * Eins og er virkar hann bara fyrir nafnorð
- * 
- */
+import java.lang.NullPointerException;
+import java.lang.NumberFormatException;
+import java.lang.IndexOutOfBoundsException;
+
 public class HTMLParser {
-	
-	/**
-	 * Strengir sem notaðir eru til að athuga hvort leit skilaði núll eða fleiri niðurstöðum
-	 */
-	private String criticalMiss = "criticalMiss";
-	private String partialMiss = "partialHit";
-	private String criticalHit = "criticalHit";
-	
-	
-	/**
-	 * Inniheldur upplýsingar úr HTML5 kóðanum sem sendur
-	 * var inn í klasan sem jsoup Document
-	 */
-	private ArrayList<String> results;
-	
-	/**
-	 * doc er staðvær breyta fyrir það jsoup Document sem sent var inn í klasann
-	 */
-	private final Document doc;
-	
-	/**
-	 * @param doc er jsoup Document sem inniheldur
-	 * HTML5 kóða sérstakrar vefsíðu
-	 */
-	public HTMLParser(Document doc) {
-		this.results = new ArrayList<String>();
-		this.doc = doc;
-		constructUsableData();
+
+  public static ParserResult PR = new ParserResult();
+
+  
+
+  public HTMLParser(Document doc) {
+	  
+	  constructParserResults(doc);
+	  
+  }
+  
+  //
+  //
+  //
+  public ParserResult getParserResult() {
+	  return this.PR;
+  }
+  
+  
+//
+// Helper Functions
+//
+  private int constructInt(String a) {
+    
+    Pattern pattern = Pattern.compile("\\d+");
+    Matcher matcher = pattern.matcher(a);
+    int start = 0;
+    int end = 0;
+    while( matcher.find() ) {
+      start = matcher.start();
+      end = matcher.end();
+    }
+    
+    int result = 0;
+    try {
+      result = Integer.parseInt(a.substring(start, end));
+    }
+    catch( NumberFormatException e) {
+      result = 0;
+    }
+    
+    return result;
+  }
+
+  private int[] manageMultipleIds(String[] a) {
+    
+    int[] returnValue = new int[a.length];
+    int iterations;
+    for( int i = 0; i < a.length; i++ ) {
+      iterations = constructInt(a[i]);
+      returnValue[i] = iterations;
+    }
+    
+    return returnValue;
+  }  
+  
+ 
+  
+//
+// Single results
+//
+  private void constructSingleResult(Document doc) {
+    
+    String title = doc.getElementsByTag("h2").text();
+    
+    PR.setTitle(title);
+    String warning = "";
+    try {
+      Elements bad = doc.getElementsByClass("alert");
+      warning = bad.text();
+    }
+    catch( NullPointerException e ) {
+      // Do nothing
+    }
+    
+    PR.setNode(warning);
+    
+    Element body = doc.body();
+    
+    ArrayList<ArrayList<String>> blockres = new ArrayList<ArrayList<String>>();
+    
+    int outCounter = 0;
+    
+    ArrayList<String> oneBlock = new ArrayList<String>();
+    
+    for( Element e : body.getAllElements() ) {
+      
+      if( e.tag().toString() == "h3" ) {
+	if( outCounter != 0 ) {
+	  blockres.add(oneBlock);
+	  //testPrinting(oneBlock);
+	  oneBlock = new ArrayList<String>();
+	  outCounter = 0;
 	}
+	oneBlock.add("h3 " + e.text());
+	outCounter++;
+      
+      }
+      
+      if( e.tag().toString() == "h4" ) {
 	
-	/**
-	 * @param a er strengur
-	 * @return skilar true ef strengurinn inniheldur punkt (".")
-	 */
-	private boolean isLegalNO(String a) {
-		return a.contains(".");
-	}
+	oneBlock.add("h4 " + e.text());
+      
+      }
+      
+      if( e.tag().toString() == "th" ) {
 	
+	oneBlock.add("th " + e.text());
+      
+      }
+      
+      if( e.tag().toString() == "tr" ) {
 	
-	/**
-	 * Ef niðurstaða heyrir undir orflokkinn nafnorð þá sér fallið um að
-	 * týna beygingarmyndir út úr HTML5 kóðanum.
-	 */
-	private void parseNO() {
-		Element a = doc.body();
-	    Elements e = a.getElementsByTag("tr");
-	    
-	    String parseString;
-	    
-	    for( Element element : e ) {
-	      parseString = element.text();
-	      if( isLegalNO(parseString) ) {
-	    	  this.results.add(parseString);
-	      }
-	    }
-	}
-	
-	/**
-	 * Ef niðurstaða heyrir undir orflokkinn lýsingarorð þá sér fallið um að
-	 * týna beygingarmyndir út úr HTML5 kóðanum.
-	 * 
-	 * Fallið er ekki rétt
-	 */
-	private void parseLO() {
-		Element a = doc.body();
-	    Elements tr = a.getElementsByTag("tr");
-	    
-	    String parseString;
-	    
-	    for( Element element : tr ) {
-	      parseString = element.text();
-	      
-	      if( isLegalNO(parseString) ) {
-	    	  this.results.add(parseString);
-	      }
-	    }
-	}
-	
-	/**
-	 * 
-	 * @param a er strengur
-	 * @return skilar true ef a er löglegur strengur sem niðurstöður
-	 * beygingarmynda fyrir sagnorð, false annars
-	 * 
-	 * Fallið virkar ekki rétt
-	 */
-	private boolean isLegalSO(String a) {
-		String[] illegal = { "pers", "Et. Ft.", "Nútíð", "Þátíð", "Eintala", "Fleirtala", "Germynd Miðmynd", "Karlkyn Kvenkyn Hvorugkyn" };
-	    
-	    for( int i = 0; i < illegal.length; i++ ) {
-	    	if( a.contains(illegal[i]) ) {
-	    		return false;
-	    	}
-	    }
-	    return true;
-	}
-	
-	
-	/**
-	 * Ef niðurstaða heyrir undir orflokkinn sagnorð þá sér fallið um að
-	 * týna beygingarmyndir út úr HTML5 kóðanum.
-	 * 
-	 * Fallið er ekki rétt
-	 */
-	private void parseSO() {
-		Element a = doc.body();
-	    Elements tr = a.getElementsByTag("tr");
-	    
-	    String parseString;
-	    
-	    for( Element element : tr ) {
-	    	parseString = element.text();
-	    	if( isLegalSO(parseString) ) {
-	    		this.results.add(parseString);
-	    	}
-	    }
-	}
-	
-	
-	/**
-	 * Ef niðurstaðan var nákvæmlega ein þá athugar fallið orðflokk niðurstöðunnar sem fundinn var
-	 * og kallar svo á viðeigandi föll svo hægt sé að fylla lista af viðeigandi niðurstöðum
-	 */
-	private void parseCriticalHit() {
-		
-		Element body = doc.body();
-		
-		String identify = body.getElementsByTag("small").text();
-		
-		if( identify.contains("nafnorð") ) {
-			this.results.add(identify);
-			parseNO();
-		}
-		else if( identify.contains("Lýsingarorð")) {
-			this.results.add(identify);
-			parseLO();
-		}
-		else {
-			this.results.add(identify);
-			parseSO();
-		}
-		
-	}
-	
-	
-	/**
-	 * Ef fleiri en ein niðurstaða fannst þá fyllir fallið
-	 * út listann með viðeigandi gildum
-	 */
-	private void parsePartialHit() {
-		Element body = doc.body();
-		Elements e = body.getElementsByTag("li");
-		
-		String description, id, info;
-		
-		for( Element element : e ) {
-			
-			description = element.text();
-			
-			id = element.getElementsByTag("a").attr("onClick");
-			id = id.substring(id.indexOf("'")+1, id.lastIndexOf("'"));
-			
-			info = description + " - " + id;
-			
-			this.results.add(info);
-		}
-	}
-	
-	
-	/**
-	 * 
-	 * @param e er ekki tómt jsoup Element
-	 * @return true ef fleiri en ein niðurstaða fannst
-	 */
-	private boolean multiHits(Element e) {
-		return e.toString().toLowerCase().contains("fundust. smelltu");
-	}
-	
-	/**
-	 * 
-	 * @param e er ekki tómt jsoup Element
-	 * @return true ef einhver niðustaða fannst
-	 */
-	private boolean found(Element e) {
-		return !e.toString().toLowerCase().contains(" fannst ekki.");
-	}
-	
-	
-	/**
-	 * Athugar hvað er rökfræðilega rétt næsta skref í greiningu HTML5 kóðans.
-	 * Þ.e. hvort niðurstaða eða niðurstöður voru fundnar
-	 */
-	private void constructUsableData() {
-		Element e = doc.body();		
-		if( found(e) ) {
-			
-			if( multiHits(e) ) {
-				this.results.add(this.partialMiss);
-				parsePartialHit();
-			}
-			else {
-				this.results.add(this.criticalHit);
-				parseCriticalHit();
-			}
-			
-		}
-		else {
-			this.results.add(this.criticalMiss);
-		}
-	}
-	
-	/**
-	 * @return lista yfir greiningu HTML5-kóðans sem
-	 * kom inn með jsoup Document-inu doc
-	 */
-	public ArrayList<String> getResults() {
-		return this.results;
-	}
+	oneBlock.add("tr " + e.text());
+      
+      }
+      
+    }
+    blockres.add(oneBlock);
+    //System.out.println(blockres.size());
+    PR.setResults(blockres);
+    
+    
+  }  
+  
+  
+  
+//
+// Multiple results
+//
+  private void constructMultipleResults(Document doc) {
+    
+    String[] ids = new String[doc.select("li").size()];
+    String[] desc = new String[doc.select("li").size()];
+    
+    int count = 0;
+    
+    for( Element e : doc.select("li") ) {
+      desc[count] = e.text();
+      
+      ids[count] = e.getElementsByTag("a").attr("onClick").toString();
+      
+      count++;
+    }
+    
+    PR.setDesc(desc);
+    
+    PR.setIds(manageMultipleIds(ids));
+    
+    
+    
+  }  
+  
+  
+  
+//
+// constructParserResults
+//
+  private void constructParserResults(Document doc) {
+    Element body = doc.body();
+    if( body.text().contains("Orðið") && body.text().contains("fannst ekki") && body.text().contains("Ef þú telur að orðið sé fullgilt") ) {
+      PR.setType("Word not found");
+    }
+    else {
+      
+      if( body.text().contains("Smelltu á það orð sem þú vilt sjá:") ) {
+	PR.setType("Multiple results");
+	constructMultipleResults(doc);
+      }
+      
+      else {
+	PR.setType("Single result");
+	constructSingleResult(doc);
+      }
+    }
+  }  
 }
+  
 

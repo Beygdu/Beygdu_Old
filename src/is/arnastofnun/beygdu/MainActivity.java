@@ -2,6 +2,7 @@ package is.arnastofnun.beygdu;
 
 import is.arnastofnun.parser.HTMLParser;
 import is.arnastofnun.parser.Nafnord;
+import is.arnastofnun.parser.ParserResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,12 +43,16 @@ public class MainActivity extends FragmentActivity {
 	 * The result from the parser search.
 	 */
 	public ArrayList<String> results = new ArrayList<String>();
-
+	public ParserResult PR = new ParserResult();
 	/**
 	 * @param results setur results inní tilviksbreytu klasans.
 	 */
 	public void setOrd(ArrayList<String> results) {
 		this.results = results;
+	}
+	
+	public void setParserResult(ParserResult a) {
+		this.PR = a;
 	}
 
 	@Override
@@ -218,6 +223,7 @@ public class MainActivity extends FragmentActivity {
 		 * url - urlinn sem parserinn notar. 
 		 */
 		private HTMLParser parser;
+		private ParserResult PR;
 		private String url;
 		
 		/**
@@ -262,7 +268,7 @@ public class MainActivity extends FragmentActivity {
 		 */
 		@Override
 		protected void onPostExecute(Void args) {
-			setOrd(parser.getResults());
+			setParserResult(parser.getParserResult());
 			checkWordCount();
 		}
 	}
