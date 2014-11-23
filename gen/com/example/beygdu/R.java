@@ -73,13 +73,13 @@ public final class R {
         public static final int data_table=0x7f090003;
         public static final int editText1=0x7f090008;
         public static final int editText2=0x7f090007;
+        public static final int filterButton=0x7f090004;
         public static final int horizontalView=0x7f090002;
         public static final int imageView1=0x7f09000e;
         public static final int mainSearch=0x7f09000c;
         public static final int scrollview=0x7f090001;
         public static final int table=0x7f090012;
         public static final int tableLayout1=0x7f09000a;
-        public static final int tableTitle=0x7f090004;
         public static final int tabs=0x7f090017;
         public static final int textView1=0x7f090005;
         public static final int textView2=0x7f090009;

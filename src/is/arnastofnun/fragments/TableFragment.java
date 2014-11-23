@@ -48,6 +48,10 @@ import com.example.beygdu.R;
 			this.block = block;
 			this.title = title;
 		}
+		
+		public CharSequence getTitle() {
+			return title.getText();
+		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
