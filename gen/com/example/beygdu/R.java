@@ -61,31 +61,30 @@ public final class R {
         public static final int tableborder=0x7f02001d;
     }
     public static final class id {
-        public static final int about=0x7f090017;
-        public static final int aboutText=0x7f090012;
-        public static final int aboutTitle=0x7f090011;
-        public static final int action_mail=0x7f090014;
-        public static final int action_refresh=0x7f090016;
-        public static final int action_search=0x7f090015;
-        public static final int button1=0x7f090007;
-        public static final int commitSearch=0x7f09000e;
+        public static final int about=0x7f090016;
+        public static final int aboutText=0x7f090011;
+        public static final int aboutTitle=0x7f090010;
+        public static final int action_mail=0x7f090013;
+        public static final int action_refresh=0x7f090015;
+        public static final int action_search=0x7f090014;
+        public static final int button1=0x7f090006;
+        public static final int commitSearch=0x7f09000d;
         public static final int container=0x7f090000;
         public static final int data_table=0x7f090003;
-        public static final int editText1=0x7f090009;
-        public static final int editText2=0x7f090008;
+        public static final int editText1=0x7f090008;
+        public static final int editText2=0x7f090007;
         public static final int horizontalView=0x7f090002;
-        public static final int imageView1=0x7f09000f;
-        public static final int mainSearch=0x7f09000d;
-        public static final int note=0x7f090005;
+        public static final int imageView1=0x7f09000e;
+        public static final int mainSearch=0x7f09000c;
         public static final int scrollview=0x7f090001;
-        public static final int tableLayout1=0x7f09000b;
+        public static final int table=0x7f090012;
+        public static final int tableLayout1=0x7f09000a;
         public static final int tableTitle=0x7f090004;
-        public static final int table_no=0x7f090013;
-        public static final int tabs=0x7f090018;
-        public static final int textView1=0x7f090006;
-        public static final int textView2=0x7f09000a;
-        public static final int title=0x7f09000c;
-        public static final int titleSmall=0x7f090010;
+        public static final int tabs=0x7f090017;
+        public static final int textView1=0x7f090005;
+        public static final int textView2=0x7f090009;
+        public static final int title=0x7f09000b;
+        public static final int titleSmall=0x7f09000f;
     }
     public static final class layout {
         public static final int activity_about=0x7f030000;

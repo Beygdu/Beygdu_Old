@@ -1,11 +1,16 @@
 package is.arnastofnun.beygdu;
 
+import is.arnastofnun.parser.Block;
+import is.arnastofnun.parser.SubBlock;
+import is.arnastofnun.parser.Tables;
 import is.arnastofnun.parser.WordResult;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -46,14 +51,14 @@ public class BeygingarActivity extends Activity {
 		TextView titleDesc = (TextView) findViewById(R.id.tableTitle);
 		titleDesc.setText(words.getTitle());
 
-		//TODO Remove TextView if "" .. or create TextView programatically if not ""
 		//SetNote
-		TextView note = (TextView) findViewById(R.id.note);
 		if(!words.getNote().equals("")) {
+			TextView note = new TextView(this);
 			note.setText(words.getNote());
+			tableLayout.addView(note);
 		}
 		
-		getFragmentManager().beginTransaction().add(tableLayout.getId(), TableFragment.newInstance(BeygingarActivity.this, tableLayout, words)).commit();
+		getFragmentManager().beginTransaction().add(tableLayout.getId(), TableFragment.newInstance(BeygingarActivity.this, tableLayout, words)).commit();		
 	}
 	
 	@Override
@@ -73,6 +78,7 @@ public class BeygingarActivity extends Activity {
 
 		return super.onOptionsItemSelected(item);
 	}
+	
 
 	/**
 	 * @author Jón Friðrik Jónatansson
@@ -87,24 +93,24 @@ public class BeygingarActivity extends Activity {
 		 * description - er nafn töflunar.
 		 */
 		private Context context;
-		private TableLayout tables;
+		private TableLayout tableLayout;
 		private WordResult words;
 		
 				
 		/**
 		 * @param context the context in which the fragment will be placed
-		 * @param tables 
-		 * @param word 
+		 * @param tableLayout
+		 * @param tables
 		 */
-		public TableFragment(Context context, TableLayout tables, WordResult words) {
+		public TableFragment(Context context, TableLayout tableLayout, WordResult words) {
 			this.context = context;
-			this.tables = tables;
+			this.tableLayout = tableLayout;
 			this.words = words;
 		}
 		
 		@SuppressWarnings("javadoc")
-		public static TableFragment newInstance(Context context, TableLayout tables, WordResult words) {
-	        TableFragment f = new TableFragment(context, tables, words);
+		public static TableFragment newInstance(Context context, TableLayout tableLayout, WordResult words) {
+	        TableFragment f = new TableFragment(context, tableLayout, words);
 	        return f;
 	    }
 
@@ -113,41 +119,76 @@ public class BeygingarActivity extends Activity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.table,
 					container, false);
-			createTable();
-//			setTableText(rootView);
+			createBlock();
 			return rootView;
 		}
 		
-		private void createTable() {
-			TextView tableTitle = new TextView(context);
-			tableTitle.setText(words.getTitle());
-			tables.addView(tableTitle);
-			
-			//Iterate through blocks
-			for (int block = 0; block < words.getBlocks().size(); block++){
-				TextView blockTitle = new TextView(context);
-				blockTitle.setText(words.getBlocks().get(block).getTitle());
-				tables.addView(blockTitle);
-				
-				//Iterate through subBlocks
-//				for (int row = 0; row < ; row++) {
-//					TableRow tr = new TableRow(context);
-//					tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-//					for (int col = 0; col < word.colNum; col++) {
-//						TextView cell = new TextView(context);
-//						cell.setTextAppearance(context, R.style.BodyText);
-//						String id = ""+row+col;
-//						cell.setId(Integer.parseInt(id));
-//						cell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
-//						cell.setText("Cell"+row+col+"\t");
-//						tr.addView(cell);
-//					}
-//					tables.addView(tr);
-//				}
-				
+		private void createBlock() {
+			//Iterate through blocks and set title
+			for (Block block : words.getBlocks()) {
+				if(!block.getTitle().equals("")) {
+					TextView blockTitle = new TextView(context);
+					blockTitle.setText(block.getTitle());
+					tableLayout.addView(blockTitle);
+				}	
+				//Iterate through sub-blocks and set title
+				for (SubBlock sBlock: block.getBlocks()){
+					if(!sBlock.getTitle().equals("")) {
+						TextView subBlockTitle = new TextView(context);
+						subBlockTitle.setText(sBlock.getTitle());
+						tableLayout.addView(subBlockTitle);
+					}
+					//Create the tables and set title
+					for (Tables tables : sBlock.getTables()) {
+						if(!tables.getTitle().equals("")) {
+							TextView tableTitle = new TextView(context);
+							tableTitle.setText(tables.getTitle());
+							tableLayout.addView(tableTitle);
+						}
+						createTable(tables);
+					}
+				}				
 			}
-				
+		}	
+		
+		private void createTable(Tables tables) {
+			int rowNum = tables.getRowNames().length;
+			int colNum = tables.getColumnNames().length;
 			
-		}		
+			TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(10);
+			tableRowParams.setMargins(1, 1, 1, 1);
+			tableRowParams.weight = 1;
+			tableRowParams.height = 100;
+			
+			int contentIndex = 0;
+			for (int row = 0; row < rowNum; row++) {
+				TableRow tr = new TableRow(context);
+				
+				
+				tr.setLayoutParams(tableRowParams);
+				
+				tr.setBackgroundColor(Color.BLACK);
+				for (int col = 0; col < colNum; col++) {
+					TextView cell = new TextView(context);
+					cell.setTextAppearance(context, R.style.BodyText);
+					cell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+					cell.setGravity(Gravity.CENTER);
+					cell.setBackgroundColor(Color.LTGRAY);
+					cell.setTextColor(Color.WHITE);
+					if (row == 0) {
+						cell.setText(tables.getColumnNames()[col]);
+					} else {
+						if (col == 0) {
+							cell.setText(tables.getRowNames()[row]);
+						} else {
+							cell.setText(tables.getContent().get(contentIndex++));
+						}
+					}
+					tr.addView(cell);
+				}
+				tableLayout.addView(tr);
+			}
+			
+		}
 	}
 }

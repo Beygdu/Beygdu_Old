@@ -300,8 +300,8 @@ public class WordResult implements Serializable {
   private Tables constructLoTables(ArrayList<String> a) {
 	  
 	  String tableTitle = destroyPointer(a.get(0));
-	  String[] columnNames = { "Karlkyn", "Kvennkyn", "HvorugKyn" };
-	  String[] rowNames = { "Nf.", "Þf.", "Þgf.", "Ef." };
+	  String[] columnNames = { "", "Karlkyn", "Kvennkyn", "HvorugKyn" };
+	  String[] rowNames = { "", "Nf.", "Þf.", "Þgf.", "Ef." };
 	  
 	  ArrayList<String> content = new ArrayList<String>();
 	  

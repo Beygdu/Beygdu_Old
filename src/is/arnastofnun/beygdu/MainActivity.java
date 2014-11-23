@@ -95,9 +95,7 @@ public class MainActivity extends FragmentActivity {
 			Toast.makeText(this, "Einingis hægt að leita að einu orði í einu", Toast.LENGTH_SHORT).show();
 		}
 		if(word.isEmpty()){
-			editText.setText("veggur");
-			new ParseThread(word).execute();
-			//Toast.makeText(this, "Vinsamlegasta sláið inn orð í reitinn hér að ofan", Toast.LENGTH_SHORT).show();
+			Toast.makeText(this, "Vinsamlegasta sláið inn orð í reitinn hér að ofan", Toast.LENGTH_SHORT).show();
 		} else {
 			//New Thread to get word
 			new ParseThread(word).execute();
