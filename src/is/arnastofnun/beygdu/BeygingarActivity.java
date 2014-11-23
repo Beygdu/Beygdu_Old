@@ -1,13 +1,9 @@
 package is.arnastofnun.beygdu;
 
-import is.arnastofnun.parser.Nafnord;
-
-import java.util.ArrayList;
-
-import com.example.beygdu.R;
-
+import is.arnastofnun.parser.WordResult;
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -16,7 +12,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.example.beygdu.R;
 
 /**
  * @author Jón Friðrik Jónatansson
@@ -31,8 +30,7 @@ public class BeygingarActivity extends Activity {
 	 * tables er tablelayout activitiesins, hér fara TableFragmentin.
 	 * no - er container fyrir Nafnorð. 
 	 */
-	private TableLayout tables;
-	private Nafnord no = null;
+	private TableLayout tableLayout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,14 +38,22 @@ public class BeygingarActivity extends Activity {
 		setContentView(R.layout.activity_beygingar);
 		
 		Intent intent = getIntent();
-		no = (Nafnord) intent.getSerializableExtra("NO");				
-		tables = (TableLayout) findViewById(R.id.data_table);
+		WordResult words = (WordResult) intent.getSerializableExtra("word");
+		tableLayout = (TableLayout) findViewById(R.id.data_table);
+		
+		
+		//SetTitle
 		TextView titleDesc = (TextView) findViewById(R.id.tableTitle);
-		titleDesc.setText(no.getEintala().get(0));
-		getFragmentManager().beginTransaction().add(tables.getId(), TableFragment.newInstance(no.getEintala(), "Eintala"), 
-													"table1").commit();
-		getFragmentManager().beginTransaction().add(tables.getId(), TableFragment.newInstance(no.getFleirtala(), "Fleirtala"), 
-													"table2").commit();	
+		titleDesc.setText(words.getTitle());
+
+		//TODO Remove TextView if "" .. or create TextView programatically if not ""
+		//SetNote
+		TextView note = (TextView) findViewById(R.id.note);
+		if(!words.getNote().equals("")) {
+			note.setText(words.getNote());
+		}
+		
+		getFragmentManager().beginTransaction().add(tableLayout.getId(), TableFragment.newInstance(BeygingarActivity.this, tableLayout, words)).commit();
 	}
 	
 	@Override
@@ -80,51 +86,68 @@ public class BeygingarActivity extends Activity {
 		 * content er arraylisti af þeim strengjum, í réttri röð, sem eiga að birtast
 		 * description - er nafn töflunar.
 		 */
-		private ArrayList<String> content;
-		private String description;
+		private Context context;
+		private TableLayout tables;
+		private WordResult words;
+		
 				
 		/**
-		 * @param content the content of the table
-		 * @param description the description of the table.
-		 * The constructor to build the table
+		 * @param context the context in which the fragment will be placed
+		 * @param tables 
+		 * @param word 
 		 */
-		public TableFragment(ArrayList<String> content, String description) {
-			this.content = content;
-			this.description = description;
+		public TableFragment(Context context, TableLayout tables, WordResult words) {
+			this.context = context;
+			this.tables = tables;
+			this.words = words;
 		}
 		
 		@SuppressWarnings("javadoc")
-		public static TableFragment newInstance(ArrayList<String> content, String description) {
-	        TableFragment f = new TableFragment(content, description);
+		public static TableFragment newInstance(Context context, TableLayout tables, WordResult words) {
+	        TableFragment f = new TableFragment(context, tables, words);
 	        return f;
 	    }
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.table_no,
+			View rootView = inflater.inflate(R.layout.table,
 					container, false);
-			setTableText(rootView);
+			createTable();
+//			setTableText(rootView);
 			return rootView;
 		}
 		
-		/**
-		 * @param view the view
-		 * Sets the text in the TextViews in the table
-		 */
-		private void setTableText(View view) {
-			int desID = getResources().getIdentifier("description", "id", "com.example.beygdu");
-			((TextView) view.findViewById(desID)).setText(description);
-			int index = 0;
-			for(int row=0; row < 4; row++) {
-				   for(int col = 0; col < 2; col++) {
-				    String cellID = "cell" + row + col;
-				    int resID = getResources().getIdentifier(cellID, "id", "com.example.beygdu");
-				    ((TextView) view.findViewById(resID)).setText(content.get(index));
-				    index++;
-				   }
+		private void createTable() {
+			TextView tableTitle = new TextView(context);
+			tableTitle.setText(words.getTitle());
+			tables.addView(tableTitle);
+			
+			//Iterate through blocks
+			for (int block = 0; block < words.getBlocks().size(); block++){
+				TextView blockTitle = new TextView(context);
+				blockTitle.setText(words.getBlocks().get(block).getTitle());
+				tables.addView(blockTitle);
+				
+				//Iterate through subBlocks
+//				for (int row = 0; row < ; row++) {
+//					TableRow tr = new TableRow(context);
+//					tr.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+//					for (int col = 0; col < word.colNum; col++) {
+//						TextView cell = new TextView(context);
+//						cell.setTextAppearance(context, R.style.BodyText);
+//						String id = ""+row+col;
+//						cell.setId(Integer.parseInt(id));
+//						cell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+//						cell.setText("Cell"+row+col+"\t");
+//						tr.addView(cell);
+//					}
+//					tables.addView(tr);
+//				}
+				
 			}
-		}
-		
+				
+			
+		}		
 	}
 }

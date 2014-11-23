@@ -1,12 +1,13 @@
 package is.arnastofnun.parser;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher; 
 
-public class WordResult {
+public class WordResult implements Serializable {
 
   private String type;
   private String title;
@@ -32,6 +33,18 @@ public class WordResult {
   //
   public ArrayList<Block> getBlocks() {
     return this.blocks;
+  }
+  
+  /**
+   * @return tilte
+   */
+  public String getTitle() {
+  	// TODO Auto-generated method stub
+  	return title;
+  }
+  
+  public String getNote() {
+	  return note;
   }
   
   private void populateBlockList() {

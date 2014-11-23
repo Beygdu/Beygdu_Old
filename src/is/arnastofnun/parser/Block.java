@@ -1,8 +1,9 @@
 package is.arnastofnun.parser;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Block {
+public class Block implements Serializable {
 
   private String title;
   

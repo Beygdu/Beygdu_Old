@@ -1,9 +1,10 @@
 package is.arnastofnun.parser;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Tables {
+public class Tables implements Serializable {
 
   private String title;
   

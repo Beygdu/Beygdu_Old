@@ -1,8 +1,8 @@
 package is.arnastofnun.beygdu;
 
 import is.arnastofnun.parser.HTMLParser;
-import is.arnastofnun.parser.Nafnord;
 import is.arnastofnun.parser.ParserResult;
+import is.arnastofnun.parser.WordResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,14 +42,10 @@ public class MainActivity extends FragmentActivity {
 	/**
 	 * The result from the parser search.
 	 */
-	public ArrayList<String> results = new ArrayList<String>();
 	public ParserResult PR = new ParserResult();
 	/**
 	 * @param results setur results inní tilviksbreytu klasans.
 	 */
-	public void setOrd(ArrayList<String> results) {
-		this.results = results;
-	}
 	
 	public void setParserResult(ParserResult a) {
 		this.PR = a;
@@ -99,10 +95,13 @@ public class MainActivity extends FragmentActivity {
 			Toast.makeText(this, "Einingis hægt að leita að einu orði í einu", Toast.LENGTH_SHORT).show();
 		}
 		if(word.isEmpty()){
-			Toast.makeText(this, "Vinsamlegasta sláið inn orð í reitinn hér að ofan", Toast.LENGTH_SHORT).show();
+			editText.setText("veggur");
+			new ParseThread(word).execute();
+			//Toast.makeText(this, "Vinsamlegasta sláið inn orð í reitinn hér að ofan", Toast.LENGTH_SHORT).show();
+		} else {
+			//New Thread to get word
+			new ParseThread(word).execute();
 		}
-		//New Thread to get word
-		new ParseThread(word).execute();
 	}
 	
 	/**
@@ -113,22 +112,22 @@ public class MainActivity extends FragmentActivity {
 	 * 
 	 */
 	private void checkWordCount() {
-		if (results.get(0).equalsIgnoreCase("partialHit")) {
+		String pr = PR.getType();
+		if (pr.equals("Multiple results")) {
 			FragmentManager fM = getSupportFragmentManager();
 			DialogFragment newFragment = new WordChooserDialogFragment();
 			newFragment.show(fM, "wordChooserFragment");
-		} else if(results.get(0).equalsIgnoreCase("criticalHit")){
-			//TODO: Tímabundið þar til við búum fleirri klasa fyrir aðra orðflokka
-			Nafnord no = new Nafnord(results);
-			createNewActivity(no);
-		} else {
+		} else if (pr.equals("Single result")) {
+			WordResult word = PR.getWordResult();
+			createNewActivity(word);
+		} else if (pr.equals("Word not found")) {
 			Toast.makeText(this, "Engin leitarniðurstaða", Toast.LENGTH_SHORT).show();
 		}
 	}
 
-	private void createNewActivity(Nafnord no) {
+	private void createNewActivity(WordResult word) {
 		Intent intent = new Intent(this, BeygingarActivity.class);
-		intent.putExtra("NO", no);
+		intent.putExtra("word", word);
 		startActivity(intent);
 	}
 
@@ -161,10 +160,9 @@ public class MainActivity extends FragmentActivity {
 		 * Breytir results ArrayListanum í CharSequence fylki
 		 */
 		private void makeCharArr() {
-			charArr = new CharSequence[results.size()-1];
-			for (int i = 0; i < results.size()-1; i++){
-				charArr[i] = results.get(i+1).substring(0, results.get(i+1).indexOf("-"));
-				//charArr[i] = ord.get(i);
+			charArr = new CharSequence[PR.getDesc().length];
+			for (int i = 0; i < PR.getDesc().length; i++){
+				charArr[i] = PR.getDesc()[i];
 			}
 		}
 
@@ -180,7 +178,7 @@ public class MainActivity extends FragmentActivity {
 				 */
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					selectedItem = results.get(which+1);
+					selectedItem = PR.getIds()[which]+"";
 				}
 			});
 
@@ -190,7 +188,7 @@ public class MainActivity extends FragmentActivity {
 				 */
 				public void onClick(DialogInterface dialog, int id) {
 					if( selectedItem != null) {
-						int wordId = Integer.parseInt(selectedItem.split("- ")[1]);
+						int wordId = Integer.parseInt(selectedItem);
 						new ParseThread(wordId).execute();
 					} else {
 						//TODO: make clever error handling here:Toast.makeText(mContext, "Vinsamlegast veljið orð", Toast.LENGTH_SHORT).show();
@@ -205,7 +203,6 @@ public class MainActivity extends FragmentActivity {
 					// User cancelled the dialog
 				}
 			});
-			// Create the AlertDialog object and return it
 			return builder.create();
 		}	
 	}
