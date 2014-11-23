@@ -2,10 +2,8 @@ package is.arnastofnun.parser;
 
 
 
-import java.util.*;
+
 import java.util.ArrayList;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 
 
 public class ParserResult {

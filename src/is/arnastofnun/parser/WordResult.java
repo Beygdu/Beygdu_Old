@@ -1,649 +1,550 @@
 package is.arnastofnun.parser;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
-
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.Matcher; 
 
-public class WordResult {
+public class WordResult implements Serializable {
 
-  private String type;
-  private String title;
-  private String note;
-  
-  private ArrayList<ArrayList<String>> dump;
-  
-  private ArrayList<Block> blocks = new ArrayList<Block>();
-
-  public WordResult(String type, String title, String note, ArrayList<ArrayList<String>> dump) {
-  
-    this.type = type;
-    this.title = title;
-    this.note = note;
-    this.dump = dump;
-    
-    populateBlockList();
-  
-  }
-  
-  //
-  //
-  //
-  public ArrayList<Block> getBlocks() {
-    return this.blocks;
-  }
-  
-  private void populateBlockList() {
-    
-    if(this.title.contains("Sagnorð")) {
-      populateSOBlocks();
-    }
-    
-    else if(this.title.contains("Lýsingarorð")) {
-      populateLOBlocks();
-    }
-    
-    else {
-      populateSimpleBlocks();
-    }
-    
-  }
-  
-//////
-//////	Helper Functions
-//////
-
-  ////
-  ////
-  ////
-  private boolean isLegalSimpleBlock(String a) {
-    return a.contains("Nf.") || a.contains("Þf.") || a.contains("Þgf.") || a.contains("Ef.");
-  }
-  
-  ////
-  ////
-  ////
-  private String destroyPointer(String a) {
-    return a.substring(a.indexOf(" ")+1, a.length());
-  }
-  
-  ////
-  ////
-  ////
-  private ArrayList<String> constructNormalCases(String a) {
-    ArrayList<String> returnValue = new ArrayList<String>();
-    
-    Pattern pattern = Pattern.compile("\\s");
-    Matcher matcher = pattern.matcher(a);
-    
-    ArrayList<Integer> starts = new ArrayList<Integer>();
-    
-    while( matcher.find() ) {
-      starts.add(matcher.start());
-    }
-    
-    for( int i = starts.size()-1; i > -1; i-- ) {
-      returnValue.add(a.substring(starts.get(i)+1, a.length()));
-      a = a.substring(0, starts.get(i));
-    }
-    returnValue.add(a);
-    
-    return listReverse(returnValue);
-  }
-  
-  ////
-  ////
-  ////
-  private ArrayList<String> constructSpecialCases(String a) {
-    ArrayList<String> returnValue = new ArrayList<String>();
-    
-    Pattern pattern = Pattern.compile("\\w\\s\\w");
-    Matcher matcher = pattern.matcher(a);
-    
-    ArrayList<Integer> starts = new ArrayList<Integer>();
-    
-    while( matcher.find() ) {
-      starts.add(matcher.start());
-    }
-    
-    for( int i = starts.size()-1; i > -1; i-- ) {
-      returnValue.add(a.substring(starts.get(i)+2, a.length()));
-      a = a.substring(0, starts.get(i)+1);
-    }
-    returnValue.add(a);
-    
-    return listReverse(returnValue);
-  }
-  
-  ////
-  ////
-  ////
-  private ArrayList<String> listReverse(ArrayList<String> a) {
-    
-    ArrayList<String> temp = new ArrayList<String>();
-    
-    for( int i = a.size()-1; i > -1; i-- ) {
-    
-      temp.add(a.get(i));
-    
-    }
-    
-    return temp;
-  }
-  
-  private String[] constructSoColumnNames(int a) {
-	  if(a == 0) {
-		  String[] returnArray = { "Et.", "Ft." };
-		  return returnArray;
-	  }
-	  else if(a == 1) {
-		  String[] returnArray = { "Germynd", "Miðmynd" };
-		  return returnArray;  
-	  }
-	  else if(a == 2) {
-		  String[] returnArray = { "Germynd", "Miðmynd" };
-		  return returnArray; 
-	  }
-	  else if(a == 4) {
-		  String[] returnArray = { "Karlkyn", "Kvennkyn", "Hvorugkyn" };
-		  return returnArray;
-	  }
-	  else if(a == 5) {
-		  String[] returnArray = { "Et.", "Ft." };
-		  return returnArray;
-	  }
-	  return null;
-  }
-  
-  private String[] constructSoRowNames(int a) {
-	  if(a == 0) {
-		  String[] returnArray = { "1. pers.", "2. pers.", "3. pers." };
-		  return returnArray;
-	  }
-	  else if(a == 1) {
-		  String[] returnArray = { "Stýfður", "Et.", "Ft." };
-		  return returnArray;
-	  }
-	  else if(a == 2) {
-		  return null;
-	  }
-	  else if(a == 4) {
-		  String[] returnArray = { "Nf.", "Þf.", "Þgf.", "Ef." };
-		  return returnArray;
-	  }
-	  else if(a == 5) {
-		  String[] returnArray = { "3. pers." };
-		  return returnArray;
-	  }
-	  return null;
-  }
-  
-  private boolean isIllegalSoString(String a) {
-	  return (a.contains("tr") && (a.contains("Nútíð") || a.contains("Þátíð"))) ||
-			  a.contains(". pers.") || a.contains(".pers") || a.contains("Et. Ft.") ||
-			  (a.length() <= 3) || (a.contains("tr") && (a.contains("Eintala") || a.contains("Fleirtala"))) ||
-			  (a.contains("tr") && (a.contains("Germynd") || a.contains("Miðmynd"))) ||
-			  (a.contains("tr") && (a.contains("Karlkyn") || a.contains("Kvennkyn") || a.contains("HvorugKyn")));
-  }
-  
-  private Tables constructSoTables(ArrayList<String> a, String bT, String sBT) {
-	  
-	  ArrayList<String> content = new ArrayList<String>();
-	  
-	  return new Tables("", null, null, content);
-  }
-  
-  private SubBlock constructSoSubBlocks(ArrayList<String> a, String bT) {
-	  
-	  ArrayList<Tables> tb = new ArrayList<Tables>();
-	  
-	  String title = destroyPointer(a.get(0));
-	  
-	  ArrayList<ArrayList<String>> rawTables = new ArrayList<ArrayList<String>>();
-	  ArrayList<String> temp = new ArrayList<String>();
-	  
-	  int count = 0;
-	  for( String s : a ) {
-		  
-		  if( s.contains("h3") && count != 0 ) {
-			  rawTables.add(temp);
-			  temp = new ArrayList<String>();
-			  count = 0;
-			  temp.add(s);
-			  count++;
-		  }
-		  else {
-			  temp.add(s);
-			  count++;
-		  }
-		  
-	  }
-	  rawTables.add(temp);
-	  
-	  Tables oTB;
-	  
-	  for( ArrayList<String> rTB : rawTables ) {
-		  
-		  oTB = constructSoTables(rTB, bT, title);
-		  tb.add(oTB);
-		  
-	  }
-	  
-	  return new SubBlock(title, tb);
-  }
-  
-  private void consructSoBlocks(ArrayList<String> a) {
-	  
-	  ArrayList<SubBlock> sb = new ArrayList<SubBlock>();
-	  
-	  String title = destroyPointer(a.get(0));
-	  
-	  ArrayList<ArrayList<String>> rawSubBlocks = new ArrayList<ArrayList<String>>();
-	  ArrayList<String> temp = new ArrayList<String>();
-	  
-	  int count = 0;
-	  for( String s : a ) {
-		  
-		  if( !isIllegalSoString(s) ) {
-			  
-			  if( s.contains("h3") && count != 0 ) {
-				  rawSubBlocks.add(temp);
-				  temp = new ArrayList<String>();
-				  count = 0;
-				  temp.add(s);
-				  count++;
-			  }
-			  else {
-				  temp.add(s);
-				  count++;
-			  }
-			  
-		  }
-	  }
-	  
-	  rawSubBlocks.add(temp);
-	  SubBlock oSB;
-	  
-	  for( ArrayList<String> bje : rawSubBlocks ) {
-		  
-		 oSB = constructSoSubBlocks(bje, a.get(0));
-		 sb.add(oSB);
-		  
-	  }
-	  
-	  this.blocks.add(new Block(title, sb));
-  }
-  
-  
-  private boolean isIllegalLoString(String a) {
-    return a.contains("tr") && (a.contains("Eintala") || a.contains("Fleirtala"));
-  }
-  
-  private boolean isIllegalLoRaw(String a) {
-	  return a.contains("h3") || (a.contains("tr") && (a.contains("Eintala") || a.contains("Fleirtala"))) || (a.contains("tr") && !a.contains("."));
-  }
-  
-  private Tables constructLoTables(ArrayList<String> a) {
-	  
-	  String tableTitle = destroyPointer(a.get(0));
-	  String[] columnNames = { "Karlkyn", "Kvennkyn", "HvorugKyn" };
-	  String[] rowNames = { "Nf.", "Þf.", "Þgf.", "Ef." };
-	  
-	  ArrayList<String> content = new ArrayList<String>();
-	  
-	  ArrayList<String> temp;
-	  
-	  for( String s : a ) {
-		  
-		  if( s.contains(".") ) {
-			  
-			  temp = new ArrayList<String>();
-			  
-			  if( s.contains("/") ) {
-				  temp = constructSpecialCases(destroyPointer(destroyPointer(s)));
-			  }
-			  else {
-				  temp = constructNormalCases(destroyPointer(destroyPointer(s)));
-			  }
-			  
-			  for( String j : temp ) {
-				  
-				  content.add(j);
-				  
-			  }
-			  
-		  }
-		  
-	  }
-	  
-	  return new Tables(tableTitle, columnNames, rowNames, content);
-  }
-  
-  private SubBlock constructLoSubBlock(ArrayList<String> a) {
-	  
-	  ArrayList<Tables> tab = new ArrayList<Tables>();
-	  
-	  ArrayList<ArrayList<String>> rawTables = new ArrayList<ArrayList<String>>();
-	  ArrayList<String> temp = new ArrayList<String>();
-	  
-	  int count = 0;
-	  for( String s : a ) {
-		  
-		  if( s.contains("h4") ) {
-			  // DO NOTHING
-		  }
-		  else if( s.contains("th") && count != 0 ) {
-			  rawTables.add(temp);
-			  temp = new ArrayList<String>();
-			  count = 0;
-			  temp.add(s);
-			  count++;
-		  }
-		  else {
-			  temp.add(s);
-			  count++;
-		  }
-		  
-	  }
-	  rawTables.add(temp);
-	  
-	  for( ArrayList<String> y : rawTables ) {
-		  
-		  Tables ttable = constructLoTables(y);
-		  
-		  tab.add(ttable);
-		  
-	  }
-	  
-	  return new SubBlock(destroyPointer(a.get(0)), tab);
-  }
-  
-  private void constructLoBlocks(ArrayList<String> a) {
-  
-	  String blockTitle = destroyPointer(a.get(0));
-	  
-	  ArrayList<SubBlock> sB = new ArrayList<SubBlock>();
-	  
-	  ArrayList<ArrayList<String>> rawSubBlocks = new ArrayList<ArrayList<String>>();
-	  
-	  ArrayList<String> temp = new ArrayList<String>();
-	  
-	  int count = 0;
-	  for( String s : a ) {
+	private String type;
+	private String title;
+	private String note;
+	
+	private ArrayList<Block> blocks = new ArrayList<Block>();
+	
+	private ArrayList<ArrayList<String>> dump;
+	
+	public WordResult(String type, String title, String note, ArrayList<ArrayList<String>> dump) {
 		
-		  if( !isIllegalLoRaw(s)) {
-			  
-			  if( s.contains("h4") && count != 0 ) {
-				  rawSubBlocks.add(temp);
-				  temp = new ArrayList<String>();
-				  count = 0;
-				  temp.add(s);
-				  count++;
-			  }
-			  else {
-				  temp.add(s);
-				  count++;
-			  }
-			  
-		  }
-		  
-	  }
-	  rawSubBlocks.add(temp);
-	  
-	  for( ArrayList<String> t : rawSubBlocks ) {
-		  
-		  SubBlock nSB = constructLoSubBlock(t);
-		  
-		  sB.add(nSB);
-	  }
-	  
-	  
-	  this.blocks.add(new Block(blockTitle, sB));
-    
-  }
-  
-  
-//////
-////// Populate Functions
-//////
-
-  private boolean isIllegalNoString(String a) {
-  
-    return (a.contains("tr") && (a.contains("Eintala") || a.contains("Fleirtala"))) || (a.length() < 4);
-  
-  }
-  
-  private String consructTableTitle(String a) {
-  
-    return a.substring(3, a.length());
-  
-  }
-  
-  private ArrayList<String> constructContent(String a) {
-  
-    a = a.substring(3, a.length());
-    a = a.substring(a.indexOf(" ")+1, a.length());
-    
-    ArrayList<String> returnList;
-    
-    if( a.contains("/") ) {
-      returnList = constructSpecialCases(a);
-    }
-    else {
-      returnList = constructNormalCases(a);
-    }
-    
-    return returnList;
-  
-  }
-  
-  private String destroyHeader(String a) {
-	  return a.substring(3, a.length());
-  }
-  
-  private Tables constructNOTables(ArrayList<String> a) {
-	  
-	  String tableTitle = "";
-	  String[] columnNames = { "án greinis", "með greini" };
-	  String[] rowNames = { "Nf.", "Þf.", "Þgf.", "Ef." };
-	  ArrayList<String> content = new ArrayList<String>();
-	  
-	  ArrayList<String> temp = new ArrayList<String>();
-	  
-	  for( String s : a) {
-		  
-		  if( s.contains("th") ) {
-			  
-			  tableTitle = destroyHeader(s);
-			  
-		  }
-		  
-		  if( s.contains(".") ) {
-			  
-			  if( s.contains("/") ) {
-				  temp = constructSpecialCases(destroyPointer(destroyPointer(s)));
-			  }
-			  else {
-				  temp = constructNormalCases(destroyPointer(destroyPointer(s)));
-			  }
-			  for( String t : temp ) {
-				  content.add(t);
-			  }
-			  
-		  }
-		  
-	  }
-	  
-	  return new Tables(tableTitle, columnNames, rowNames, content);
-  }
-
-  private boolean isIllegalRawNo(String a) {
-	  return (a.contains("tr") && (a.contains("Eintala") || a.contains("Fleirtala")) ) || (a.length() < 4);
-  }
-  
-  private void constructNoBlock(ArrayList<String> a) {
-  /*
-    String[] columnNames = { "án greinis", "með greini" };
-    String[] rowNames = { "Nf.", "Þf.", "Þgf.", "Ef." };
-    
-    ArrayList<ArrayList<String>> tableConstruct = new ArrayList<ArrayList<String>>();
-    ArrayList<String> temp = new ArrayList<String>();
-    
-    int internalCount = 0;
-    for( String line : a ) {
-      
-      if( !isIllegalNoString(line) ) {
-	
-	if( line.contains("th") && internalCount != 0 ) {
-	
-	  tableConstruct.add(temp);
-	  internalCount = 0;
-	  temp = new ArrayList<String>();
-	  temp.add(line);
-	  internalCount++;
-	
+		this.type = type;
+		this.title = title;
+		this.note = note;
+		this.dump = dump;
+		
+		populateBlockList();
 	}
-	else {
+
+	// Public Methods
 	
-	  temp.add(line);
-	  internalCount++;
-	
+	//
+	//
+	//
+	public String getTpe() {
+		return this.type;
 	}
 	
-      }
-      
-    }
-    
-    tableConstruct.add(temp);
-    
-    ArrayList<Tables> tables = new ArrayList<Tables>();
-    
-    String title = "";
-    ArrayList<String> res = new ArrayList<String>();
-    ArrayList<String> tempt = new ArrayList<String>();
-    
-    
-    for( ArrayList<String> aList : tableConstruct ) {
-    
-      res = new ArrayList<String>();
-      
-      for( String line : aList ) {
-      
-	if( a.contains("th") ) {
-	  title = consructTableTitle(line);
+	//
+	//
+	//
+	public String getTitle() {
+		return this.title;
 	}
 	
-	if( a.contains(".") ) {
-	  tempt = constructContent(line);
-	  
-	  for( String l : temp ) {
-	    res.add(l);
-	  }
-	  
+	//
+	//
+	//
+	public String getNote() {
+		return this.note;
 	}
 	
-      
-      }
-      
-      tables.add(new Tables(title, columnNames, rowNames, res));
-    
-    }
-    
-    ArrayList<SubBlock> sbal = new ArrayList<SubBlock>();
-    SubBlock subB = new SubBlock("", tables);
-    sbal.add(subB);
-    Block oneBlock = new Block("", sbal);
-    
-    this.blocks.add(oneBlock);
-    
-  */
-
-	  
-	  String subBlockTitle = "";
-	  
-	  ArrayList<ArrayList<String>> rawData = new ArrayList<ArrayList<String>>();
-	  ArrayList<String> temp = new ArrayList<String>();
-	  
-	  int count = 0;
-	  for( String s : a ) {
-		  
-		  if( !isIllegalRawNo(s) ) {
-			  
-			  if( s.contains("th") && count != 0 ) {
-				  
-				  rawData.add(temp);
-				  temp = new ArrayList<String>();
-				  count = 0;
-				  temp.add(s);
-				  count++;
-				  
-			  }
-			  else {
-				  
-				  temp.add(s);
-				  count++;
-				  
-			  }
-			  
-		  }
-		  
-	  }
-	  
-	  rawData.add(temp);
-	  
-	  ArrayList<Tables> tAL = new ArrayList<Tables>();
-	  
-	  for( ArrayList<String> d : rawData ) {
-		  
-		  Tables tempTwo = constructNOTables(d);
-		  
-		  tAL.add(tempTwo);
-		  
-	  }
-	  
-	  SubBlock sB = new SubBlock(subBlockTitle, tAL);
-	  
-	  ArrayList<SubBlock> sAL = new ArrayList<SubBlock>();
-	  sAL.add(sB);
-	  
-	  this.blocks.add(new Block("", sAL));
-	  
-	  
-  }
-  
-  
-  
-  
-
-  private void populateSimpleBlocks() {
-    
-    for( ArrayList<String> aList : this.dump ) {
-    
-      constructNoBlock(aList);
-    
-    }
-    
-  }
-  
-  private void populateLOBlocks() {
-  
-    for( ArrayList<String> aList : dump ) {
-      
-      constructLoBlocks(aList);
-      
-    }
-  
-  }
-  
-  private void populateSOBlocks() {
-  
-	  for( ArrayList<String> aList : dump ) {
-		  
-		  consructSoBlocks(aList);
-		  
-	  }
-	  
-  }
-  
+	//
+	//
+	//
+	public ArrayList<Block> getBlocks() {
+		return this.blocks;
+	}
+	
+	// Private Methods
+	
+	// Helper Functions
+	
+	private String destroyPointer(String a) {
+		return a.substring(a.indexOf(" ")+1, a.length());
+	}
+	
+	private String destroyDoublePointer(String a) {
+		return destroyPointer(destroyPointer(a));
+	}
+	
+	private ArrayList<String> reverseList(ArrayList<String> a) {
+		ArrayList<String> backwardsList = new ArrayList<String>();
+		
+		for( int i = a.size()-1; i > -1; i-- ) {
+			backwardsList.add(a.get(i));
+		}
+		
+		return backwardsList;
+		
+	}
+	
+	private ArrayList<String> constructArguments(String a, ArrayList<Integer> starts) {
+		ArrayList<String> returnList = new ArrayList<String>();
+		
+		for( int i = starts.size()-1; i > -1; i-- ) {
+			returnList.add(a.substring(starts.get(i)+2, a.length()));
+			a = a.substring(0, starts.get(i)+1);
+		}
+		returnList.add(a);
+		
+		return reverseList(returnList);
+	}
+	
+	private ArrayList<String> constructResultsFromRows(String a, int caseId) {
+		
+		ArrayList<String> returnList = new ArrayList<String>();
+		
+		if( caseId == 1 ) {
+			Pattern pattern = Pattern.compile("[^/]\\s[^/]");
+			Matcher matcher = pattern.matcher(a);
+			
+			ArrayList<Integer> starts = new ArrayList<Integer>();
+			
+			while( matcher.find() ) {
+				starts.add(matcher.start());
+			}
+			
+			returnList = constructArguments(a, starts);
+		}
+		
+		return returnList;
+	}
+	
+	private boolean isIllegalSoRaw(String a) {
+		return (a.contains("tr") && (a.contains("Nútíð") || a.contains("Þátíð"))) ||
+				a.contains("Et. Ft.") || a.contains(". pers") || (a.length() <= 3) ||
+				(a.contains("th") && (a.contains("Germynd") || a.contains("Miðmynd"))) ||
+				(a.contains("tr") && (a.contains("Eintala") || a.contains("Fleirtala"))) ||
+				a.contains("Karlkyn Kvenkyn Hvorugkyn") || a.contains("pers");
+	}
+	
+	private String constructSoTitle(String a) {
+		String returnString = "";
+		if(a.contains("th")) {
+			returnString = destroyPointer(a);
+		}
+		return returnString;
+	}
+	
+	private String[] constructSoColumnNames(String a, String b) {
+		String[] errorArray = { "" };
+		
+		if( a.contains("Persónuleg notkun - Germynd") || a.contains("Persónuleg notkun - Miðmynd") || 
+				a.contains("Ópersónuleg notkun - Germynd") ||
+				a.contains("Ópersónuleg notkun - Miðmynd") ) {
+			if( b.contains("Nafnháttur") ) {
+				return errorArray;
+			}
+			else {
+				String[] temp = { "", "Et.", "Ft." };
+				return temp;
+			}
+		}
+		else if( a.contains("Boðháttur") || a.contains("Sagnbót") ) {
+			String[] temp = { "", "Germynd", "Miðmynd" };
+			return temp;
+		}
+		else if( a.contains("Lýsingarháttur nútíðar") ) {
+			return errorArray;
+		}
+		else if( a.contains("Lýsingarháttur þátíðar") ) {
+			String[] temp = { "", "Karlkyn", "Kvenkyn", "Hvorugkyn" };
+			return temp;
+		}
+		return errorArray;
+	}
+	
+	private String[] constructSoRowNames(String a, String b) {
+		String[] errorArray = { "" };
+		
+		if( a.contains("Ópersónuleg notkun - Germynd (Gervifrumlag)") ) {
+			String[] temp = { "", "3. pers." };
+			return temp;			
+		}
+		else if( a.contains("Persónuleg notkun - Germynd") || a.contains("Persónuleg notkun - Miðmynd") || 
+				(a.contains("Ópersónuleg notkun - Germynd") && !a.contains("(Gervifrumlag)")) ||
+				a.contains("Ópersónuleg notkun - Miðmynd") ) {
+			if( b.contains("Nafnháttur") ) {
+				return errorArray;
+			}
+			else {
+				String[] temp = { "", "1. pers.", "2. pers.", "3. pers." };
+				return temp;
+			}
+		}
+		else if( a.contains("Sagnbót") ) {
+			return errorArray;
+		}
+		else if( a.contains("Boðháttur")  ) {
+			String[] temp = { "", "Stýfður", "Et.", "Ft." };
+			return temp;
+		}
+		else if( a.contains("Lýsingarháttur nútíðar") ) {
+			return errorArray;
+		}
+		else if( a.contains("Lýsingarháttur þátíðar") ) {
+			String[] temp = { "", "Nf.", "Þf.", "Þgf.", "Ef." };
+			return temp;
+		}
+		
+		return errorArray;
+	}
+	
+	private Tables constructSoTables(ArrayList<String> a, String bTitle, String sbTitle) {
+		
+		String nTitle = constructSoTitle(a.get(0));
+		if( bTitle.contains("Boðháttur") || bTitle.contains("Sagnbót") || bTitle.contains("nútíðar") ) {
+			nTitle = "";
+		}
+		ArrayList<String> content = new ArrayList<String>();
+		
+		String[] columnNames = constructSoColumnNames(bTitle, sbTitle);
+		String[] rowNames = constructSoRowNames(bTitle, sbTitle);
+		
+		
+		
+		ArrayList<String> temp;
+		
+		for( String s : a ) {
+			if( s.contains("th") || s.contains("Germynd Miðmynd") ) {
+				// Do nothing
+			}
+			else if( s.contains(".") ) {
+				temp = constructResultsFromRows(destroyDoublePointer(s), 1);
+				
+				for( String t : temp ) {
+					content.add(t);
+				}
+			}
+			else if( s.contains("Stýfður") ) {
+				content.add(destroyDoublePointer(s));
+				content.add("--");
+			}
+			else {
+				content.add(destroyPointer(s));
+			}
+		}
+		
+		return new Tables(nTitle, columnNames, rowNames, content);
+	}
+	
+	private SubBlock constructSoSubBlock(ArrayList<String> a, String bTitle) {
+		
+		String nTitle = destroyPointer(a.get(0));
+		if( bTitle.contains("Boðháttur") || bTitle.contains("Sagnbót") || bTitle.contains("nútíðar") ) {
+			nTitle = "";
+		}
+		ArrayList<Tables> tables = new ArrayList<Tables>();
+		
+		ArrayList<ArrayList<String>> rawTables = new ArrayList<ArrayList<String>>();
+		ArrayList<String> temp = new ArrayList<String>();
+		
+		int count = 0;
+		for( String s : a ) {
+			
+			if( s.contains("h4") ) {
+				// Do nothing
+			}
+			else if( (s.contains("Germynd Miðmynd") || s.contains("th")) && count > 0 ) {
+				rawTables.add(temp);
+				temp = new ArrayList<String>();
+				count = 0;
+				
+				temp.add(s);
+				count++;
+			}
+			else {
+				temp.add(s);
+				count++;
+			}
+			
+		}
+		rawTables.add(temp);
+		
+		for( ArrayList<String> s : rawTables ) {
+			
+			Tables nT = constructSoTables(s, bTitle, nTitle);
+			tables.add(nT);
+			
+		}
+		
+		return new SubBlock(nTitle, tables);
+	}
+	
+	private void constructSoBlock(ArrayList<String> a) {
+		
+		String nTitle = destroyPointer(a.get(0));
+		ArrayList<SubBlock> sB = new ArrayList<SubBlock>();
+		
+		ArrayList<ArrayList<String>> rawSubBlock = new ArrayList<ArrayList<String>>();
+		ArrayList<String> temp = new ArrayList<String>();
+		
+		int count = 0;
+		for( String s : a ) {
+			
+			if( !isIllegalSoRaw(s) ) {
+				if( s.contains("h3") ) {
+					// Do nothing
+				}
+				else if( s.contains("h4") && count >0 ) {
+					rawSubBlock.add(temp);
+					temp = new ArrayList<String>();
+					count = 0;
+					
+					temp.add(s);
+					count++;
+				}
+				else {
+					temp.add(s);
+					count++;
+				}
+			}
+		}
+		rawSubBlock.add(temp);
+		
+		for( ArrayList<String> s : rawSubBlock ) {
+			
+			SubBlock nSB = constructSoSubBlock(s, nTitle);
+			sB.add(nSB);
+		}
+		
+		this.blocks.add(new Block(nTitle, sB));
+		
+	}
+	
+	private void populateSoBlocks() {
+		for( ArrayList<String> aList : dump ) {
+			
+			constructSoBlock(aList);
+			
+		}
+	}
+	
+	
+	private String constructLoTitle(String a) {
+		String returnString = "";
+		if( !this.title.contains("Töluorð") ) {
+			return destroyPointer(a);
+		}		
+		return returnString;
+	}
+	
+	private boolean isIllegalLoRaw(String a) {
+		return (a.contains("tr") && (a.contains("Eintala") || a.contains("Fleirtala"))) ||
+				(a.contains("Karlkyn") && a.contains("Kvenkyn") && a.contains("Hvorugkyn"));
+	}
+	
+	private Tables constructLoTables(ArrayList<String> a) {
+		
+		String nTitle = destroyPointer(a.get(0));
+		ArrayList<String> content = new ArrayList<String>();
+		String[] columnNames = { "", "Karlkyn", "Kvennkyn", "HvorugKyn" };
+		String[] rowNames = { "", "Nf.", "Þf.", "Þgf.", "Ef." };
+		
+		ArrayList<String> temp = new ArrayList<String>();
+		
+		for( String s : a ) {
+			if( s.contains(".") ) {
+				temp = constructResultsFromRows(destroyDoublePointer(s), 1);
+				
+				for( String t : temp ) {
+					content.add(t);
+				}
+			}			
+		}
+		
+		return new Tables(nTitle, columnNames, rowNames, content);
+	}
+	
+	private SubBlock constructLoSubBlock(ArrayList<String> a) {
+		
+		String nTitle = constructLoTitle(a.get(0));
+		ArrayList<Tables> tables = new ArrayList<Tables>();
+		
+		ArrayList<ArrayList<String>> rawTables = new ArrayList<ArrayList<String>>();
+		ArrayList<String> temp = new ArrayList<String>();
+		
+		int count = 0;
+		for( String s : a ) {
+			if( s.contains("h4") ) {
+				// Do nothing
+			}
+			else if( s.contains("th") && count >0 ) {
+				rawTables.add(temp);
+				temp = new ArrayList<String>();
+				count = 0;
+				
+				temp.add(s);
+				count++;
+			}
+			else {
+				temp.add(s);
+				count++;
+			}
+		}
+		rawTables.add(temp);
+		
+		for( ArrayList<String> s : rawTables ) {
+			
+			Tables nT = constructLoTables(s);
+			tables.add(nT);
+			
+		}
+		
+		return new SubBlock(nTitle, tables);
+	}
+	
+	private void constructLoBlock(ArrayList<String> a) {
+		
+		String nTitle = constructLoTitle(a.get(0));
+		ArrayList<SubBlock> sB = new ArrayList<SubBlock>();
+		
+		ArrayList<ArrayList<String>> rawSubBlocks = new ArrayList<ArrayList<String>>();
+		ArrayList<String> temp = new ArrayList<String>();
+		
+		int count = 0;
+		for( String s : a ) {
+			
+			if( !isIllegalLoRaw(s) ) {
+				
+				if( s.contains("h3") ) {
+					// Do nothing
+				}
+				else if( s.contains("h4") && count > 0 ) {
+					rawSubBlocks.add(temp);
+					temp = new ArrayList<String>();
+					count = 0;
+					
+					temp.add(s);
+					count++;
+					
+				}
+				else {
+					temp.add(s);
+					count++;
+				}
+				
+			}
+			
+		}
+		rawSubBlocks.add(temp);
+		
+		for( ArrayList<String> s : rawSubBlocks ) {
+			
+			SubBlock nSB = constructLoSubBlock(s);
+			sB.add(nSB);
+		}
+		
+		this.blocks.add(new Block(nTitle, sB));
+	}
+	
+	private void populateLoBlocks() {
+		for( ArrayList<String> aList : dump ) {
+			
+			constructLoBlock(aList);
+			
+		}		
+	}
+	
+	
+	private boolean isLegalRawNo(String a) {
+		return (a.contains("tr") && (a.contains("Eintala") || a.contains("Fleirtala"))) ||
+				(a.length() <= 3) || (a.contains("án greinis með greini"));
+	}
+	
+	private Tables constructNoTables(ArrayList<String> a) {
+		
+		String nTitle = destroyPointer(a.get(0));
+		String[] columnNames = { "", "án greinis", "með greini" };
+		String[] rowNames = { "", "Nf.", "Þf.", "Þgf.", "Ef." };
+		ArrayList<String> content = new ArrayList<String>();
+		
+		ArrayList<String> temp = new ArrayList<String>();
+		
+		for( String s : a ) {
+			if( s.contains(".") ) {
+				temp = constructResultsFromRows(destroyDoublePointer(s), 1);
+				
+				for( String t : temp ) {
+					content.add(t);
+				}
+			}
+		}
+		
+		return new Tables(nTitle, columnNames, rowNames, content);
+	}
+	
+	private void constructNoBlock(ArrayList<String> a) {
+		
+		String nTitle = "";
+		ArrayList<SubBlock> sB = new ArrayList<SubBlock>();
+		
+		ArrayList<ArrayList<String>> rawData = new ArrayList<ArrayList<String>>();
+		ArrayList<String> temp = new ArrayList<String>();
+		int count = 0;
+		for( String s : a ) {
+			
+			if( !isLegalRawNo(s) ) {
+				
+				if( s.contains("th") && count > 0 ) {
+					rawData.add(temp);
+					temp = new ArrayList<String>();
+					count = 0;
+					
+					temp.add(s);
+					count++;
+				}
+				else {
+					temp.add(s);
+					count++;
+				}
+				
+			}
+			
+		}
+		rawData.add(temp);
+		
+		ArrayList<Tables> tables = new ArrayList<Tables>();
+		
+		for( ArrayList<String> s : rawData ) {
+			
+			Tables oT = constructNoTables(s);
+			tables.add(oT);
+			
+		}
+		
+		SubBlock oSB = new SubBlock(nTitle, tables);
+		
+		sB.add(oSB);
+		
+		this.blocks.add(new Block(nTitle, sB));
+	}
+	
+	private void populateNoBlocks() {
+		
+		for( ArrayList<String> aList : dump ) {
+			
+			constructNoBlock(aList);
+			
+		}
+	}
+	
+	private void populateBlockList() {
+	    
+		if(this.title.contains("Sagnorð")) {
+	        populateSoBlocks();
+	    }
+	      
+	    else if(this.title.contains("Lýsingarorð") || this.title.contains("Töluorð")) {
+	        populateLoBlocks();
+	    }
+	      
+	    else if(this.title.contains("Atviksorð")){
+	        // TODO : make it work?
+	    } 
+	    else {
+	    	populateNoBlocks();
+	    }
+	}
 }
