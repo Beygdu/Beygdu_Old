@@ -1,6 +1,9 @@
 package is.arnastofnun.beygdu;
 
 import is.arnastofnun.fragments.TableFragment;
+import is.arnastofnun.parser.Block;
+import is.arnastofnun.parser.SubBlock;
+import is.arnastofnun.parser.Tables;
 import is.arnastofnun.parser.WordResult;
 import android.app.Activity;
 import android.content.Intent;
@@ -47,7 +50,18 @@ public class BeygingarActivity extends Activity {
 			tableLayout.addView(note);
 		}
 		
-		getFragmentManager().beginTransaction().add(tableLayout.getId(), new TableFragment(BeygingarActivity.this, tableLayout, words)).commit();		
+		
+		//Iterate through blocks and set title
+		for (Block block : words.getBlocks()) {
+			TextView blockTitle = new TextView(this);
+			blockTitle.setText(block.getTitle());
+				
+			getFragmentManager().beginTransaction().add(tableLayout.getId(), 
+					new TableFragment(BeygingarActivity.this, tableLayout, block, blockTitle)).commit();	
+		}
+		
+		
+		
 	}
 	
 	@Override

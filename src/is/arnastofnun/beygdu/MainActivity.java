@@ -43,9 +43,6 @@ public class MainActivity extends FragmentActivity {
 	 * The result from the parser search.
 	 */
 	public ParserResult PR = new ParserResult();
-	/**
-	 * @param results setur results inní tilviksbreytu klasans.
-	 */
 	
 	public void setParserResult(ParserResult a) {
 		this.PR = a;
