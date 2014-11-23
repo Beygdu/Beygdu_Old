@@ -61,52 +61,30 @@ public final class R {
         public static final int tableborder=0x7f02001d;
     }
     public static final class id {
-        public static final int about=0x7f09002c;
-        public static final int aboutText=0x7f09000f;
-        public static final int aboutTitle=0x7f09000e;
-        public static final int action_mail=0x7f090029;
-        public static final int action_refresh=0x7f09002b;
-        public static final int action_search=0x7f09002a;
-        public static final int button1=0x7f090004;
-        public static final int cell00=0x7f090013;
-        public static final int cell01=0x7f090014;
-        public static final int cell011=0x7f090017;
-        public static final int cell02=0x7f090015;
-        public static final int cell10=0x7f090024;
-        public static final int cell11=0x7f090018;
-        public static final int cell12=0x7f090019;
-        public static final int cell20=0x7f09001b;
-        public static final int cell21=0x7f09001c;
-        public static final int cell22=0x7f09001d;
-        public static final int cell30=0x7f09001f;
-        public static final int cell31=0x7f090020;
-        public static final int cell32=0x7f090021;
-        public static final int commitSearch=0x7f09000b;
+        public static final int about=0x7f090016;
+        public static final int aboutText=0x7f090011;
+        public static final int aboutTitle=0x7f090010;
+        public static final int action_mail=0x7f090013;
+        public static final int action_refresh=0x7f090015;
+        public static final int action_search=0x7f090014;
+        public static final int button1=0x7f090006;
+        public static final int commitSearch=0x7f09000d;
         public static final int container=0x7f090000;
-        public static final int data_table=0x7f090001;
-        public static final int description=0x7f090023;
-        public static final int editText1=0x7f090006;
-        public static final int editText2=0x7f090005;
-        public static final int ef=0x7f09001e;
-        public static final int eintala=0x7f090011;
-        public static final int imageView1=0x7f09000c;
-        public static final int mainSearch=0x7f09000a;
-        public static final int nf=0x7f090012;
-        public static final int pers1=0x7f090026;
-        public static final int pers2=0x7f090027;
-        public static final int pers3=0x7f090028;
-        public static final int tableLayout1=0x7f090008;
-        public static final int tableTitle=0x7f090002;
-        public static final int table_lo=0x7f090010;
-        public static final int table_no=0x7f090022;
-        public static final int table_so=0x7f090025;
-        public static final int tabs=0x7f09002d;
-        public static final int textView1=0x7f090003;
-        public static final int textView2=0x7f090007;
-        public static final int tf=0x7f090016;
-        public static final int tgf=0x7f09001a;
-        public static final int title=0x7f090009;
-        public static final int titleSmall=0x7f09000d;
+        public static final int data_table=0x7f090003;
+        public static final int editText1=0x7f090008;
+        public static final int editText2=0x7f090007;
+        public static final int horizontalView=0x7f090002;
+        public static final int imageView1=0x7f09000e;
+        public static final int mainSearch=0x7f09000c;
+        public static final int scrollview=0x7f090001;
+        public static final int table=0x7f090012;
+        public static final int tableLayout1=0x7f09000a;
+        public static final int tableTitle=0x7f090004;
+        public static final int tabs=0x7f090017;
+        public static final int textView1=0x7f090005;
+        public static final int textView2=0x7f090009;
+        public static final int title=0x7f09000b;
+        public static final int titleSmall=0x7f09000f;
     }
     public static final class layout {
         public static final int activity_about=0x7f030000;
@@ -115,9 +93,7 @@ public final class R {
         public static final int activity_main=0x7f030003;
         public static final int fragment_about=0x7f030004;
         public static final int fragment_json=0x7f030005;
-        public static final int table_lo=0x7f030006;
-        public static final int table_no=0x7f030007;
-        public static final int table_so=0x7f030008;
+        public static final int table=0x7f030006;
     }
     public static final class menu {
         public static final int about=0x7f080000;

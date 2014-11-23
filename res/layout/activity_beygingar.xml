@@ -1,22 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
 	android:layout_width="fill_parent"
 	android:layout_height="fill_parent">
-        
-    <TableLayout 
-		android:id="@+id/data_table"
-		android:layout_width="fill_parent"
-		android:layout_height="fill_parent">
-		<TextView
-	        android:id="@+id/tableTitle"
-	        android:layout_width="fill_parent"
-	        android:layout_height="wrap_content"
-	        android:padding="10dp"
-	        android:paddingLeft="20dp"
-	        android:text="tabletitle"
-	        android:textColor="@color/black"
-	        android:textSize="25sp" />
-        
-	</TableLayout>
-</ScrollView>
+	
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_height="match_parent"         
+	    android:scrollbars="horizontal|vertical" 
+	    android:layout_width="match_parent"     
+	    android:layout_marginTop="5dip"     
+	    android:scrollbarStyle="outsideInset"
+	    android:fillViewport="true"
+        >
+        <HorizontalScrollView 
+	        android:id="@+id/horizontalView" 
+	        android:layout_height="wrap_content"     
+	        android:scrollbars="horizontal|vertical" 
+	        android:layout_width="wrap_content"     
+	        android:layout_marginTop="5dip">
+		    <TableLayout 
+				android:id="@+id/data_table"
+				android:layout_width="fill_parent"
+				android:layout_height="fill_parent">
+				<TextView
+			        android:id="@+id/tableTitle"
+			        android:layout_width="fill_parent"
+			        android:layout_height="wrap_content"
+			        android:padding="10dp"
+			        android:paddingLeft="20dp"
+			        android:text="tabletitle"
+			        android:textColor="@color/black"
+			        android:textSize="25sp" />
+
+			</TableLayout>
+		</HorizontalScrollView>
+	</ScrollView>
+</LinearLayout>
 
