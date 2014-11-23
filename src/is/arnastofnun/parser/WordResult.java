@@ -3,7 +3,7 @@ package is.arnastofnun.parser;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class WordResult implements Serializable {
