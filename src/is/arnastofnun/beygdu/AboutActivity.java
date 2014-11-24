@@ -32,6 +32,7 @@ public class AboutActivity extends Activity {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+		
 	}
 
 	@Override
@@ -44,12 +45,32 @@ public class AboutActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.about:
-			Intent intent1 = new Intent(this, AboutActivity.class);
-			startActivity(intent1);
+		case R.id.action_mail:
+			sendEmail();
 			break;
-		}
+		} 
 		return super.onOptionsItemSelected(item);
+	}
+
+	protected void sendEmail() {
+		Log.i("Senda post", "");
+		String[] TO = {"sth132@hi.is"};
+		String[] CC = {"sth132@hi.is"};
+		Intent emailIntent = new Intent(Intent.ACTION_SEND);
+		emailIntent.setData(Uri.parse("mailto:"));
+		emailIntent.setType("text/plain");
+		emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+		emailIntent.putExtra(Intent.EXTRA_CC, CC);
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Titt vidfang");
+		emailIntent.putExtra(Intent.EXTRA_TEXT, "Skilabod her");
+		try {
+			startActivity(Intent.createChooser(emailIntent, "Sendu post....."));
+			finish();
+			Log.i("Buin ad senda post...", "");
+		} catch (android.content.ActivityNotFoundException ex) {
+			Toast.makeText(this, 
+					"Engin póst miðill uppsettur.", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	/**

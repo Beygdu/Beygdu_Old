@@ -11,17 +11,21 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TableLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.beygdu.R;
 
@@ -39,6 +43,7 @@ public class BeygingarActivity extends FragmentActivity {
 	 */
 	private TableLayout tableLayout;
 	private ArrayList<TableFragment> tables = new ArrayList<TableFragment>();
+	private ArrayList<String> blockNames = new ArrayList<String>();
 	private ArrayList<Integer> mSelectedItems = new ArrayList<Integer>();
 	WordResult words;
 
@@ -46,13 +51,16 @@ public class BeygingarActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);	
 		setContentView(R.layout.activity_beygingar);
-
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		
 		Intent intent = getIntent();
 		words = (WordResult) intent.getSerializableExtra("word");
 		tableLayout = (TableLayout) findViewById(R.id.data_table);
 		
+		//fill mSelectedItems with possible blocks
 		for (int i = 0; i < words.getBlocks().size(); i++) {
 			mSelectedItems.add(i);
+			blockNames.add(words.getBlocks().get(i).getTitle());
 		}
 		
 		initTables();
@@ -74,6 +82,7 @@ public class BeygingarActivity extends FragmentActivity {
 
 		//Iterate through blocks and set title
 		//for (Block block : words.getBlocks()) {
+		tables.clear();
 		for (int i = 0; i < words.getBlocks().size(); i++){
 			if (mSelectedItems.contains(i)) {
 				Block block = words.getBlocks().get(i);
@@ -106,12 +115,45 @@ public class BeygingarActivity extends FragmentActivity {
 	@SuppressWarnings("unused")
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		case R.id.action_filter:
+			FragmentManager fM = getSupportFragmentManager();
+			DialogFragment newFragment = new TableChooserDialogFragment();
+			newFragment.show(fM, "tableChooserFragment");
+			break;
+		case R.id.action_about:
+			Intent intent1 = new Intent(this, AboutActivity.class);
+			startActivity(intent1);
+			break;
+		case R.id.action_mail:
+			sendEmail();
+			break;
+		} 
 		return super.onOptionsItemSelected(item);
+	}
+
+	protected void sendEmail() {
+		Log.i("Senda post", "");
+		String[] TO = {"sth132@hi.is"};
+		String[] CC = {"sth132@hi.is"};
+		Intent emailIntent = new Intent(Intent.ACTION_SEND);
+		emailIntent.setData(Uri.parse("mailto:"));
+		emailIntent.setType("text/plain");
+		emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+		emailIntent.putExtra(Intent.EXTRA_CC, CC);
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Titt vidfang");
+		emailIntent.putExtra(Intent.EXTRA_TEXT, "Skilabod her");
+		try {
+			startActivity(Intent.createChooser(emailIntent, "Sendu post....."));
+			finish();
+			Log.i("Buin ad senda post...", "");
+		} catch (android.content.ActivityNotFoundException ex) {
+			Toast.makeText(BeygingarActivity.this, 
+					"Engin póst miðill uppsettur.", Toast.LENGTH_SHORT).show();
+		}
 	}
 	
 	public void updateFragments() {
@@ -147,17 +189,26 @@ public class BeygingarActivity extends FragmentActivity {
 		private void makeCharArr() {
 			charArr = new CharSequence[tables.size()];
 			for (int i = 0; i < charArr.length; i++){
-				charArr[i] = tables.get(i).getTitle();
+				charArr[i] = blockNames.get(i);
 			}
 		}
 
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstance) {
-			mSelectedItems = new ArrayList<Integer>();
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setTitle(R.string.choosedialog);			
-
-			builder.setMultiChoiceItems(charArr, null,
+			boolean[] prevChoices = new boolean[tables.size()];
+			int index = 0;
+			for (int i = 0; i < tables.size(); i++) {
+				if (mSelectedItems.get(index) == i){
+					prevChoices[i] = true; 
+					index++;
+				} else {
+					prevChoices[i] = false;
+				}
+			}
+			
+			builder.setMultiChoiceItems(charArr, prevChoices,
 					new DialogInterface.OnMultiChoiceClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which,

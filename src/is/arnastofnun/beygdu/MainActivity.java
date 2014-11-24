@@ -5,7 +5,6 @@ import is.arnastofnun.parser.ParserResult;
 import is.arnastofnun.parser.WordResult;
 
 import java.io.IOException;
-import java.util.ArrayList;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -14,11 +13,13 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,7 +44,7 @@ public class MainActivity extends FragmentActivity {
 	 * The result from the parser search.
 	 */
 	public ParserResult PR = new ParserResult();
-	
+
 	public void setParserResult(ParserResult a) {
 		this.PR = a;
 	}
@@ -56,12 +57,12 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    // Inflate the menu items for use in the action bar
-	    MenuInflater inflater = getMenuInflater();
-	    inflater.inflate(R.menu.main, menu);
-	    return super.onCreateOptionsMenu(menu);
+		// Inflate the menu items for use in the action bar
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	/**
 	 * @return item 
 	 *  switch fyrir möguleika í ActionBar glugga. 
@@ -69,12 +70,36 @@ public class MainActivity extends FragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-		case R.id.about:
+		case R.id.action_about:
 			Intent intent1 = new Intent(this, AboutActivity.class);
 			startActivity(intent1);
 			break;
-		}
+		case R.id.action_mail:
+			sendEmail();
+			break;
+		} 
 		return super.onOptionsItemSelected(item);
+	}
+
+	protected void sendEmail() {
+		Log.i("Senda post", "");
+		String[] TO = {"sth132@hi.is"};
+		String[] CC = {"sth132@hi.is"};
+		Intent emailIntent = new Intent(Intent.ACTION_SEND);
+		emailIntent.setData(Uri.parse("mailto:"));
+		emailIntent.setType("text/plain");
+		emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+		emailIntent.putExtra(Intent.EXTRA_CC, CC);
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Titt vidfang");
+		emailIntent.putExtra(Intent.EXTRA_TEXT, "Skilabod her");
+		try {
+			startActivity(Intent.createChooser(emailIntent, "Sendu post....."));
+			finish();
+			Log.i("Buin ad senda post...", "");
+		} catch (android.content.ActivityNotFoundException ex) {
+			Toast.makeText(MainActivity.this, 
+					"Engin póst miðill uppsettur.", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 
@@ -98,7 +123,7 @@ public class MainActivity extends FragmentActivity {
 			new ParseThread(word).execute();
 		}
 	}
-	
+
 	/**
 	 * sér hvort results sé:
 	 * <strong>Partial hit: </strong> séu mörg orð með mismunandi merkingar, en eins skrifuð
@@ -135,7 +160,7 @@ public class MainActivity extends FragmentActivity {
 	 * eða fara tilbaka.
 	 */
 	public class WordChooserDialogFragment extends DialogFragment {
-		
+
 		/**
 		 * selectedItem - það stak sem er valið í Dialognum, fyrsta stikið á listanum ef ekkert er valið.
 		 */
@@ -201,7 +226,7 @@ public class MainActivity extends FragmentActivity {
 			return builder.create();
 		}	
 	}
-	
+
 	/**
 	 * 
 	 * @author Arnar, Jón Friðrik
@@ -217,22 +242,22 @@ public class MainActivity extends FragmentActivity {
 		private HTMLParser parser;
 		private ParserResult PR;
 		private String url;
-		
+
 		/**
 		 * 
 		 * @param searchWord -strengurinn sem á að skeita aftast á urlinn
 		 */
 		public ParseThread(String searchWord) {
 			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?q=";
-			url = baseURL + searchWord;
+			url = baseURL + searchWord + "&ordmyndir=on";
 		}
-		
+
 		/**
 		 * @param searchId - heiltalan sem á að skeita aftast á urlinn.
 		 */
 		public ParseThread(int searchId) {
 			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?id=";
-			url = baseURL + searchId;
+			url = baseURL + searchId + "&ordmyndir=on";
 		}
 
 		@Override

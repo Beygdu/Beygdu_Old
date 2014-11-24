@@ -18,9 +18,8 @@
     <!-- Action Bar -->
     <string name="app_name">Beygðu</string>
     <string name="about">Um Beygðu</string>
-    <string name="action_search">Um beygðu</string>
+    <string name="action_filter">Sía</string>
     <string name="action_mail">Senda Póst</string>
-    <string name="action_refresh">Endurhlaða</string>
     <!-- Table activity strings -->
 	    <string name="tableTitle">Nafn á orði</string>
 	    <string name="eintala">Eintala</string>
