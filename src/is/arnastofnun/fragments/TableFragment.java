@@ -32,25 +32,26 @@ import com.example.beygdu.R;
 		 */
 		private Context context;
 		private TableLayout tableLayout;
-		private WordResult words;
+		private Block block;
+		private TextView title;
 		
 				
 		/**
 		 * @param context the context in which the fragment will be placed
 		 * @param tableLayout
-		 * @param tables
+		 * @param block
+		 * @param title 
 		 */
-		public TableFragment(Context context, TableLayout tableLayout, WordResult words) {
+		public TableFragment(Context context, TableLayout tableLayout, Block block, TextView title) {
 			this.context = context;
 			this.tableLayout = tableLayout;
-			this.words = words;
+			this.block = block;
+			this.title = title;
 		}
 		
-		@SuppressWarnings("javadoc")
-		public static TableFragment newInstance(Context context, TableLayout tableLayout, WordResult words) {
-	        TableFragment f = new TableFragment(context, tableLayout, words);
-	        return f;
-	    }
+		public CharSequence getTitle() {
+			return title.getText();
+		}
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,31 +63,24 @@ import com.example.beygdu.R;
 		}
 		
 		private void createBlock() {
-			//Iterate through blocks and set title
-			for (Block block : words.getBlocks()) {
-				if(!block.getTitle().equals("")) {
-					TextView blockTitle = new TextView(context);
-					blockTitle.setText(block.getTitle());
-					tableLayout.addView(blockTitle);
-				}	
-				//Iterate through sub-blocks and set title
-				for (SubBlock sBlock: block.getBlocks()){
-					if(!sBlock.getTitle().equals("")) {
-						TextView subBlockTitle = new TextView(context);
-						subBlockTitle.setText(sBlock.getTitle());
-						tableLayout.addView(subBlockTitle);
+			tableLayout.addView(title);
+			//Iterate through sub-blocks and set title
+			for (SubBlock sBlock: block.getBlocks()){
+				if(!sBlock.getTitle().equals("")) {
+					TextView subBlockTitle = new TextView(context);
+					subBlockTitle.setText(sBlock.getTitle());
+					tableLayout.addView(subBlockTitle);
+				}
+				//Create the tables and set title
+				for (Tables tables : sBlock.getTables()) {
+					if(!tables.getTitle().equals("")) {
+						TextView tableTitle = new TextView(context);
+						tableTitle.setText(tables.getTitle());
+						tableLayout.addView(tableTitle);
 					}
-					//Create the tables and set title
-					for (Tables tables : sBlock.getTables()) {
-						if(!tables.getTitle().equals("")) {
-							TextView tableTitle = new TextView(context);
-							tableTitle.setText(tables.getTitle());
-							tableLayout.addView(tableTitle);
-						}
-						createTable(tables);
-					}
-				}				
-			}
+					createTable(tables);
+				}
+			}				
 		}	
 		
 		private void createTable(Tables tables) {
