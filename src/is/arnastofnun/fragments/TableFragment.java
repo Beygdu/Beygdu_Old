@@ -87,7 +87,7 @@ import com.example.beygdu.R;
 			int rowNum = tables.getRowNames().length;
 			int colNum = tables.getColumnNames().length;
 			
-			TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(10);
+			TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
 			tableRowParams.setMargins(1, 1, 1, 1);
 			tableRowParams.weight = 1;
 			tableRowParams.height = 100;
@@ -103,7 +103,7 @@ import com.example.beygdu.R;
 				for (int col = 0; col < colNum; col++) {
 					TextView cell = new TextView(context);
 					cell.setTextAppearance(context, R.style.BodyText);
-					cell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.FILL_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+					cell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
 					cell.setGravity(Gravity.CENTER);
 					cell.setBackgroundColor(Color.LTGRAY);
 					cell.setTextColor(Color.WHITE);

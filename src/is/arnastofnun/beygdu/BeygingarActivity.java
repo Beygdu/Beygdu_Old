@@ -79,9 +79,7 @@ public class BeygingarActivity extends FragmentActivity {
 			tableLayout.addView(note);
 		}
 
-
 		//Iterate through blocks and set title
-		//for (Block block : words.getBlocks()) {
 		tables.clear();
 		for (int i = 0; i < words.getBlocks().size(); i++){
 			if (mSelectedItems.contains(i)) {
@@ -178,16 +176,15 @@ public class BeygingarActivity extends FragmentActivity {
 		private CharSequence[] charArr;
 
 		/**
-		 *  Smiður fyrir WordChooserDialog.
-		 *  Dialog þar sem notandi getur valið um leitarniðurstöður.
-		 *  Einungis hægt að velja eitt orð.
+		 *  Smiður fyrir TableChooserDialogFragment.
+		 *  Dialog þar sem notandi getur valið um töflur.
 		 */
 		public TableChooserDialogFragment() {
 			makeCharArr();
 		}
 		
 		private void makeCharArr() {
-			charArr = new CharSequence[tables.size()];
+			charArr = new CharSequence[blockNames.size()];
 			for (int i = 0; i < charArr.length; i++){
 				charArr[i] = blockNames.get(i);
 			}
@@ -197,12 +194,10 @@ public class BeygingarActivity extends FragmentActivity {
 		public Dialog onCreateDialog(Bundle savedInstance) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 			builder.setTitle(R.string.choosedialog);			
-			boolean[] prevChoices = new boolean[tables.size()];
-			int index = 0;
-			for (int i = 0; i < tables.size(); i++) {
-				if (mSelectedItems.get(index) == i){
+			boolean[] prevChoices = new boolean[blockNames.size()];
+			for (int i = 0; i < blockNames.size(); i++) {
+				if (mSelectedItems.contains(i)){
 					prevChoices[i] = true; 
-					index++;
 				} else {
 					prevChoices[i] = false;
 				}
