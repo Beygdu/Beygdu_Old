@@ -7,6 +7,9 @@ import is.arnastofnun.parser.WordResult;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -142,11 +145,17 @@ public class MainActivity extends FragmentActivity {
 	public void btnOnClick(@SuppressWarnings("unused") View view){
 		EditText editText = (EditText) findViewById(R.id.mainSearch);
 		String word = editText.getText().toString();
-		if(word.contains(" ")){
-			Toast.makeText(this, "Einingis hægt að leita að einu orði í einu", Toast.LENGTH_SHORT).show();
-		}
+		
 		if(word.isEmpty()){
 			Toast.makeText(this, "Vinsamlegasta sláið inn orð í reitinn hér að ofan", Toast.LENGTH_SHORT).show();
+		} else if(word.contains(" ")){
+			if (islegalInput(word)) {
+				word = replaceSpaces(word);
+				word = convertToUTF8(word);
+				new ParseThread(word).execute();
+			} else {
+				Toast.makeText(this, "Einingis hægt að leita að einu orði í einu", Toast.LENGTH_SHORT).show();
+			}
 		} else {
 			//New Thread to get word
 			word = convertToUTF8(word);
@@ -167,6 +176,29 @@ public class MainActivity extends FragmentActivity {
 			return "";
 		}
 	}
+	
+	private boolean islegalInput(String a) { 
+	    if (a.equals("")) {
+	    	return false;
+	    } else {
+			ArrayList<Integer> starts = new ArrayList<Integer>();  
+		    Pattern pattern = Pattern.compile("\\s");
+		    Matcher matcher = pattern.matcher(a);
+		    
+		    while( matcher.find() ) {
+		      starts.add(matcher.start());
+		    }
+		    if( starts.get(0) == a.length()-1 || (starts.get(0) == 0 && starts.size() == 1) ||
+		      (starts.get(0) == 0 && starts.get(1) == a.length()-1 && starts.size() == 2) ) {
+		      return true;
+		    } 
+		    return false;
+	    }
+	  }
+	
+	private String replaceSpaces(String a) {
+	    return a.replaceAll("\\s+","");
+	  }
 
 	/**
 	 * sér hvort results sé:
