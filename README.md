@@ -1,4 +1,2 @@
-Helloworldtest
+Beygðu
 ==============
-
-Helloworld
