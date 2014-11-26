@@ -6,11 +6,13 @@ import is.arnastofnun.parser.WordResult;
 
 import java.util.ArrayList;
 
+import android.app.ActionBar.LayoutParams;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -20,6 +22,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NavUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,12 +73,17 @@ public class BeygingarActivity extends FragmentActivity {
 		//SetTitle
 		TextView titleDesc = new TextView(this);
 		titleDesc.setText(words.getTitle());
+		titleDesc.setGravity(Gravity.CENTER);
+		titleDesc.setTextSize(40);
+		titleDesc.setHeight(130);
+		titleDesc.setTypeface(Typeface.DEFAULT_BOLD);
 		tableLayout.addView(titleDesc);
-
+		
 		//SetNote
 		if(!words.getNote().equals("")) {
 			TextView note = new TextView(this);
 			note.setText(words.getNote());
+			note.setBackgroundResource(R.drawable.noteborder);
 			tableLayout.addView(note);
 		}
 
@@ -85,6 +93,8 @@ public class BeygingarActivity extends FragmentActivity {
 			if (mSelectedItems.contains(i)) {
 				Block block = words.getBlocks().get(i);
 				TextView blockTitle = new TextView(this);
+				blockTitle.setTextSize(30);
+				blockTitle.setHeight(60);
 				blockTitle.setText(block.getTitle());
 				
 				TableFragment tFragment = new TableFragment(BeygingarActivity.this, tableLayout, block, blockTitle);
@@ -97,10 +107,15 @@ public class BeygingarActivity extends FragmentActivity {
 	/**
 	 * @param view The activies view.
 	 */
-	public void filterBtnOnClick(@SuppressWarnings("unused") View view){
-		FragmentManager fM = getSupportFragmentManager();
-		DialogFragment newFragment = new TableChooserDialogFragment();
-		newFragment.show(fM, "tableChooserFragment");
+	public void filterAction(){
+		if ( words.getBlocks().size() > 2) {
+			FragmentManager fM = getSupportFragmentManager();
+			DialogFragment newFragment = new TableChooserDialogFragment();
+			newFragment.show(fM, "tableChooserFragment");
+		} else {
+			Toast.makeText(BeygingarActivity.this, 
+					"Ekkert til að sía.", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	@Override
@@ -118,9 +133,7 @@ public class BeygingarActivity extends FragmentActivity {
 			NavUtils.navigateUpFromSameTask(this);
 			return true;
 		case R.id.action_filter:
-			FragmentManager fM = getSupportFragmentManager();
-			DialogFragment newFragment = new TableChooserDialogFragment();
-			newFragment.show(fM, "tableChooserFragment");
+			filterAction();
 			break;
 		case R.id.action_about:
 			Intent intent1 = new Intent(this, AboutActivity.class);

@@ -5,14 +5,19 @@ import is.arnastofnun.parser.ParserResult;
 import is.arnastofnun.parser.WordResult;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -53,6 +58,18 @@ public class MainActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
+		checkNetworkState();
+	}
+	
+	private void checkNetworkState() {
+		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		
+		NetworkInfo ni = cm.getActiveNetworkInfo();
+		if (ni == null) {
+			Toast.makeText(MainActivity.this, 
+					"Þú ert ekki nettengdur.", Toast.LENGTH_LONG).show();
+		}
 	}
 
 	@Override
@@ -120,6 +137,12 @@ public class MainActivity extends FragmentActivity {
 			Toast.makeText(this, "Vinsamlegasta sláið inn orð í reitinn hér að ofan", Toast.LENGTH_SHORT).show();
 		} else {
 			//New Thread to get word
+			try {
+				word = URLEncoder.encode(word, "UTF-8");
+			}
+			catch( UnsupportedEncodingException e ) {
+				word = "";
+			}
 			new ParseThread(word).execute();
 		}
 	}

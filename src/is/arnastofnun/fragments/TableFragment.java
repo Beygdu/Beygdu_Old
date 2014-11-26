@@ -69,28 +69,31 @@ import com.example.beygdu.R;
 				if(!sBlock.getTitle().equals("")) {
 					TextView subBlockTitle = new TextView(context);
 					subBlockTitle.setText(sBlock.getTitle());
+					subBlockTitle.setTextSize(25);
+					subBlockTitle.setHeight(50);
 					tableLayout.addView(subBlockTitle);
 				}
 				//Create the tables and set title
 				for (Tables tables : sBlock.getTables()) {
-					if(!tables.getTitle().equals("")) {
+//					if(!tables.getTitle().equals("")) {
 						TextView tableTitle = new TextView(context);
 						tableTitle.setText(tables.getTitle());
+						tableTitle.setTextSize(20);
+						tableTitle.setHeight(50);
 						tableLayout.addView(tableTitle);
-					}
-					createTable(tables);
+						createTable(tables);
 				}
 			}				
 		}	
 		
 		private void createTable(Tables tables) {
-			int rowNum = tables.getRowNames().length;
-			int colNum = tables.getColumnNames().length;
+			final int rowNum = tables.getRowNames().length;
+			final int colNum = tables.getColumnNames().length;
 			
-			TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT);
+			TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
 			tableRowParams.setMargins(1, 1, 1, 1);
-			tableRowParams.weight = 1;
-			tableRowParams.height = 100;
+			tableRowParams.weight = colNum;
+//			tableRowParams.height = 100;
 			
 			int contentIndex = 0;
 			for (int row = 0; row < rowNum; row++) {
@@ -99,16 +102,20 @@ import com.example.beygdu.R;
 				
 				tr.setLayoutParams(tableRowParams);
 				
-				tr.setBackgroundColor(Color.BLACK);
+				tr.setBackgroundColor(getResources().getColor(R.color.grey));
 				for (int col = 0; col < colNum; col++) {
 					TextView cell = new TextView(context);
 					cell.setTextAppearance(context, R.style.BodyText);
-					cell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT));
+					cell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
 					cell.setGravity(Gravity.CENTER);
-					cell.setBackgroundColor(Color.LTGRAY);
-					cell.setTextColor(Color.WHITE);
+					cell.setTextColor(getResources().getColor(R.color.navy));
+					cell.setBackgroundResource(R.drawable.border);
 					if (row == 0) {
-						cell.setText(tables.getColumnNames()[col]);
+						if (tables.getContent().size() == 1) {
+							cell.setText(tables.getContent().get(row));
+						} else {
+							cell.setText(tables.getColumnNames()[col]);
+						}
 					} else {
 						if (col == 0) {
 							cell.setText(tables.getRowNames()[row]);
