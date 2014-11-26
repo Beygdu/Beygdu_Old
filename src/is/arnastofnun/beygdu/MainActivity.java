@@ -37,10 +37,11 @@ import com.example.beygdu.R;
 /**
  * @author Jón Friðrik, Arnar, Snær, Máni
  * @since 05.11.14
- * @version 0.2
+ * @version 1.0
  * 
  * Fyrsti skjárinn í forritinu. Inniheldur innsláttarsvæði og takka fyrir leit.
- * Inniheldur einnig actionbar þar sem notandinn getur opnað önnur activity eins og AboutActivity.
+ * Inniheldur einnig actionbar þar sem notandinn getur opnað önnur activity eins og AboutActivity 
+ * og send póst á með kvörtun eða ábendingu.
  * 
  */
 public class MainActivity extends FragmentActivity {
@@ -48,10 +49,13 @@ public class MainActivity extends FragmentActivity {
 	/**
 	 * The result from the parser search.
 	 */
-	public ParserResult PR = new ParserResult();
+	public ParserResult pR = new ParserResult();
 
-	public void setParserResult(ParserResult a) {
-		this.PR = a;
+	/**
+	 * @param pR the parser results.
+	 */
+	public void setParserResult(ParserResult pR) {
+		this.pR = pR;
 	}
 
 	@Override
@@ -62,6 +66,11 @@ public class MainActivity extends FragmentActivity {
 		checkNetworkState();
 	}
 	
+	/**
+	 * Checks if the user is connected to a network.
+	 * TODO - Should be implemented so that it shows a dialog if 
+	 * the user is not connected
+	 */
 	private void checkNetworkState() {
 		ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
 		
@@ -97,7 +106,11 @@ public class MainActivity extends FragmentActivity {
 		} 
 		return super.onOptionsItemSelected(item);
 	}
-
+	
+	
+	/**
+	 * Sendir póst á sth132@hi.is
+	 */
 	protected void sendEmail() {
 		Log.i("Senda post", "");
 		String[] TO = {"sth132@hi.is"};
@@ -107,7 +120,7 @@ public class MainActivity extends FragmentActivity {
 		emailIntent.setType("text/plain");
 		emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
 		emailIntent.putExtra(Intent.EXTRA_CC, CC);
-		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Titt vidfang");
+		emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Þitt vidfang");
 		emailIntent.putExtra(Intent.EXTRA_TEXT, "Skilabod her");
 		try {
 			startActivity(Intent.createChooser(emailIntent, "Sendu post....."));
@@ -115,10 +128,9 @@ public class MainActivity extends FragmentActivity {
 			Log.i("Buin ad senda post...", "");
 		} catch (android.content.ActivityNotFoundException ex) {
 			Toast.makeText(MainActivity.this, 
-					"Engin póst miðill uppsettur.", Toast.LENGTH_SHORT).show();
+					"Engin póst miðill uppsettur í þessu tæki.", Toast.LENGTH_SHORT).show();
 		}
 	}
-
 
 	/**
 	 * @param view the view points to this activity. 
@@ -137,13 +149,22 @@ public class MainActivity extends FragmentActivity {
 			Toast.makeText(this, "Vinsamlegasta sláið inn orð í reitinn hér að ofan", Toast.LENGTH_SHORT).show();
 		} else {
 			//New Thread to get word
-			try {
-				word = URLEncoder.encode(word, "UTF-8");
-			}
-			catch( UnsupportedEncodingException e ) {
-				word = "";
-			}
+			word = convertToUTF8(word);
 			new ParseThread(word).execute();
+		}
+	}
+	
+	/**
+	 * @param word the searchword
+	 * @return word converted to UTF-8
+	 */
+	private String convertToUTF8(String word) {
+		try {
+			word = URLEncoder.encode(word, "UTF-8");
+			return word;
+		}
+		catch( UnsupportedEncodingException e ) {
+			return "";
 		}
 	}
 
@@ -152,16 +173,15 @@ public class MainActivity extends FragmentActivity {
 	 * <strong>Partial hit: </strong> séu mörg orð með mismunandi merkingar, en eins skrifuð
 	 * <strong>Critical hit: </strong> orðið fundið og búið að fylla niðurstöðum í object.
 	 * Eða engin leitarniðurstaða.
-	 * 
 	 */
 	private void checkWordCount() {
-		String pr = PR.getType();
+		String pr = pR.getType();
 		if (pr.equals("Multiple results")) {
 			FragmentManager fM = getSupportFragmentManager();
 			DialogFragment newFragment = new WordChooserDialogFragment();
 			newFragment.show(fM, "wordChooserFragment");
 		} else if (pr.equals("Single result")) {
-			WordResult word = PR.getWordResult();
+			WordResult word = pR.getWordResult();
 			createNewActivity(word);
 		} else if (pr.equals("Word not found")) {
 			Toast.makeText(this, "Engin leitarniðurstaða", Toast.LENGTH_SHORT).show();
@@ -185,7 +205,8 @@ public class MainActivity extends FragmentActivity {
 	public class WordChooserDialogFragment extends DialogFragment {
 
 		/**
-		 * selectedItem - það stak sem er valið í Dialognum, fyrsta stikið á listanum ef ekkert er valið.
+		 * selectedItem - það stak sem er valið í Dialognum, fyrsta stakið á listanum ef ekkert er valið.
+		 * charArr - Eru þau orð sem ParseThread skilar ef partialHit.
 		 */
 		private String selectedItem = null;
 		private CharSequence[] charArr;
@@ -196,16 +217,16 @@ public class MainActivity extends FragmentActivity {
 		 *  Einungis hægt að velja eitt orð.
 		 */
 		public WordChooserDialogFragment() {
-			makeCharArr();
+			toCharArr();
 		}
 
 		/**
 		 * Breytir results ArrayListanum í CharSequence fylki
 		 */
-		private void makeCharArr() {
-			charArr = new CharSequence[PR.getDesc().length];
-			for (int i = 0; i < PR.getDesc().length; i++){
-				charArr[i] = PR.getDesc()[i];
+		private void toCharArr() {
+			charArr = new CharSequence[pR.getDesc().length];
+			for (int i = 0; i < pR.getDesc().length; i++){
+				charArr[i] = pR.getDesc()[i];
 			}
 		}
 
@@ -221,20 +242,19 @@ public class MainActivity extends FragmentActivity {
 				 */
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
-					selectedItem = PR.getIds()[which]+"";
+					selectedItem = pR.getIds()[which]+"";
 				}
 			});
 
 			builder.setPositiveButton(R.string.afram, new DialogInterface.OnClickListener() {
 				/**
-				 * listener hlustar á ef notandinn ýtir á afram takkann
+				 * listener hlustar á ef notandinn ýtir á afram takkann.
+				 * Ef ekkert er valið og notandi ýtir á áfram þá lokast Dialoginn.
 				 */
 				public void onClick(DialogInterface dialog, int id) {
 					if( selectedItem != null) {
 						int wordId = Integer.parseInt(selectedItem);
 						new ParseThread(wordId).execute();
-					} else {
-						//TODO: make clever error handling here:Toast.makeText(mContext, "Vinsamlegast veljið orð", Toast.LENGTH_SHORT).show();
 					}
 				}
 			});
@@ -263,12 +283,13 @@ public class MainActivity extends FragmentActivity {
 		 * url - urlinn sem parserinn notar. 
 		 */
 		private HTMLParser parser;
-		private ParserResult PR;
 		private String url;
 
 		/**
 		 * 
-		 * @param searchWord -strengurinn sem á að skeita aftast á urlinn
+		 * @param searchWord -strengurinn sem á að skeita aftast á urlinn.
+		 * Búið að converta searchWord strengnum í UTF-8 streng. 
+		 * Má leita af hvaða orðmynd.
 		 */
 		public ParseThread(String searchWord) {
 			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?q=";
@@ -298,13 +319,14 @@ public class MainActivity extends FragmentActivity {
 				doc = Jsoup.connect(url).get();
 				parser = new HTMLParser(doc);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				Toast.makeText(MainActivity.this, 
+						"Tenging rofnaði, vinsamlega reynið aftur.", Toast.LENGTH_LONG).show();
 			}
 			return null;
 		}
 		/**
-		 * Fallið sem þráðurinn keyrir þegar hann er búinn að keyra doInBackground
+		 * Fallið sem þráðurinn keyrir þegar hann er búinn að keyra doInBackground.
+		 * setur síðan ParserResults í MainActivity
 		 */
 		@Override
 		protected void onPostExecute(Void args) {

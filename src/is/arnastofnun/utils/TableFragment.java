@@ -1,17 +1,16 @@
-package is.arnastofnun.fragments;
+package is.arnastofnun.utils;
 
 import is.arnastofnun.parser.Block;
 import is.arnastofnun.parser.SubBlock;
 import is.arnastofnun.parser.Tables;
-import is.arnastofnun.parser.WordResult;
 import android.app.Fragment;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -21,14 +20,18 @@ import com.example.beygdu.R;
 /**
 	 * @author Jón Friðrik Jónatansson
 	 * @since 20.10.14
-	 * @version 0.2
-	 * A placeholder fragment containing a simple view.
+	 * @version 0.9
+	 * 
+	 * Generísk tafla sem er útbúin út frá WordResult hlutnum.
+	 * Fjöldi raða og dálka veldur á fjöld af dálka og raðar hausum í WordResult hlutnum. 
 	 */
 	public class TableFragment extends Fragment {
 
 		/**
+		 * context - er contextið sem taflan birtist í
 		 * content er arraylisti af þeim strengjum, í réttri röð, sem eiga að birtast
-		 * description - er nafn töflunar.
+		 * block - inniheldur raðar og column headerana og contentið á töflunni
+		 * title - er titilinn á töflunni
 		 */
 		private Context context;
 		private TableLayout tableLayout;
@@ -37,10 +40,10 @@ import com.example.beygdu.R;
 		
 				
 		/**
-		 * @param context the context in which the fragment will be placed
-		 * @param tableLayout
-		 * @param block
-		 * @param title 
+		 * @param context er contextið sem taflan mun birtast í.
+		 * @param tableLayout - er layoutið sem taflan er sett í.
+		 * @param block - inniheldur raðar og column headerana og contentið á töflunni
+		 * @param title - er titilinn á töflunni
 		 */
 		public TableFragment(Context context, TableLayout tableLayout, Block block, TextView title) {
 			this.context = context;
@@ -49,6 +52,9 @@ import com.example.beygdu.R;
 			this.title = title;
 		}
 		
+		/**
+		 * @return titilinn á töflunni.
+		 */
 		public CharSequence getTitle() {
 			return title.getText();
 		}
@@ -62,6 +68,11 @@ import com.example.beygdu.R;
 			return rootView;
 		}
 		
+		/**
+		 * býr til textview með titli subblokkar ef hann er til.
+		 * Býr síðan til TextView með titil á töflunni og kallar síðan á 
+		 * createTable sem smíðar töfluna fyrir allar töflur í subblokkinu.
+		 */
 		private void createBlock() {
 			tableLayout.addView(title);
 			//Iterate through sub-blocks and set title
@@ -86,47 +97,48 @@ import com.example.beygdu.R;
 			}				
 		}	
 		
-		private void createTable(Tables tables) {
-			final int rowNum = tables.getRowNames().length;
-			final int colNum = tables.getColumnNames().length;
+		/**
+		 * @param table taflan sem á að smíða
+		 * Býr til TableRow fyrir hverja röð og TextView fyrir hvern column.
+		 */
+		private void createTable(Tables table) {
+			final int rowNum = table.getRowNames().length;
+			final int colNum = table.getColumnNames().length;
 			
-			TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.MATCH_PARENT);
+			TableRow.LayoutParams tableRowParams = new TableRow.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 			tableRowParams.setMargins(1, 1, 1, 1);
 			tableRowParams.weight = colNum;
 //			tableRowParams.height = 100;
 			
 			int contentIndex = 0;
 			for (int row = 0; row < rowNum; row++) {
-				TableRow tr = new TableRow(context);
-				
-				
+				TableRow tr = new TableRow(context);	
 				tr.setLayoutParams(tableRowParams);
 				
 				tr.setBackgroundColor(getResources().getColor(R.color.grey));
 				for (int col = 0; col < colNum; col++) {
 					TextView cell = new TextView(context);
 					cell.setTextAppearance(context, R.style.BodyText);
-					cell.setLayoutParams(new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f));
+					cell.setLayoutParams(new TableRow.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1f));
 					cell.setGravity(Gravity.CENTER);
 					cell.setTextColor(getResources().getColor(R.color.navy));
 					cell.setBackgroundResource(R.drawable.border);
 					if (row == 0) {
-						if (tables.getContent().size() == 1) {
-							cell.setText(tables.getContent().get(row));
+						if (table.getContent().size() == 1) {
+							cell.setText(table.getContent().get(row));
 						} else {
-							cell.setText(tables.getColumnNames()[col]);
+							cell.setText(table.getColumnNames()[col]);
 						}
 					} else {
 						if (col == 0) {
-							cell.setText(tables.getRowNames()[row]);
+							cell.setText(table.getRowNames()[row]);
 						} else {
-							cell.setText(tables.getContent().get(contentIndex++));
+							cell.setText(table.getContent().get(contentIndex++));
 						}
 					}
 					tr.addView(cell);
 				}
 				tableLayout.addView(tr);
 			}
-			
 		}
 	}

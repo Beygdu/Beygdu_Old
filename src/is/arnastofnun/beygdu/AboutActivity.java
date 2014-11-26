@@ -1,9 +1,5 @@
 package is.arnastofnun.beygdu;
 
-import java.util.concurrent.Semaphore;
-
-import com.example.beygdu.R;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -16,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+
+import com.example.beygdu.R;
 
 /**
  * @author Snær Seljan
