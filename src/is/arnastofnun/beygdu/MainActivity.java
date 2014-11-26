@@ -287,7 +287,7 @@ public class MainActivity extends FragmentActivity {
 
 		/**
 		 * 
-		 * @param searchWord -strengurinn sem á að skeita aftast á urlinn.
+		 * @param searchWord -strengurinn sem á að skeita inn í urlinn.
 		 * Búið að converta searchWord strengnum í UTF-8 streng. 
 		 * Má leita af hvaða orðmynd.
 		 */
@@ -297,7 +297,7 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		/**
-		 * @param searchId - heiltalan sem á að skeita aftast á urlinn.
+		 * @param searchId - heiltalan sem á að skeita inn í urlinn.
 		 */
 		public ParseThread(int searchId) {
 			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?id=";
