@@ -42,9 +42,9 @@ import com.example.beygdu.R;
  * @since 05.11.14
  * @version 1.0
  * 
- * Fyrsti skjárinn í forritinu. Inniheldur innsláttarsvæði og takka fyrir leit.
- * Inniheldur einnig actionbar þar sem notandinn getur opnað önnur activity eins og AboutActivity 
- * og send póst á með kvörtun eða ábendingu.
+ * The initial activity of the program. Has a Text input og a button for initializing the search.
+ * Also has an actionbar where the user can open other activies such as AboutActivity
+ * and send an email to the creator of the database
  * 
  */
 public class MainActivity extends FragmentActivity {
@@ -94,7 +94,7 @@ public class MainActivity extends FragmentActivity {
 
 	/**
 	 * @return item 
-	 *  switch fyrir möguleika í ActionBar glugga. 
+	 *  a switch for all the possibilies in the ActionBar. 
 	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
@@ -112,7 +112,7 @@ public class MainActivity extends FragmentActivity {
 	
 	
 	/**
-	 * Sendir póst á sth132@hi.is
+	 * Send a post to sth132@hi.is
 	 */
 	protected void sendEmail() {
 		Log.i("Senda post", "");
@@ -137,10 +137,10 @@ public class MainActivity extends FragmentActivity {
 
 	/**
 	 * @param view the view points to this activity. 
-	 * Keyrist þegar notandi ýtir á leita takkann.
-	 * Býr til nýjan þráð sem sér um að ná í beygingarmynd þess orðs sem var slegið inn.
-	 * Ef ekkert eða fleirri en eitt orð var slegið inn fær notandinn áminningu.
-	 * 
+	 * Runs when the user pushes the search button
+	 * Constructs a new Async thread which fetches the results for the searchString which was inputted by the user.
+	 * If nothing or more than one word was inputted the user gets a Toast notification.
+	 * The input can have 1 or two space characters infront and behind it.
 	 */
 	public void btnOnClick(@SuppressWarnings("unused") View view){
 		EditText editText = (EditText) findViewById(R.id.mainSearch);
@@ -177,6 +177,11 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param a the string
+	 * @return the string without spacecharactes (" ")
+	 */
 	private boolean islegalInput(String a) { 
 	    if (a.equals("")) {
 	    	return false;
@@ -201,10 +206,10 @@ public class MainActivity extends FragmentActivity {
 	  }
 
 	/**
-	 * sér hvort results sé:
-	 * <strong>Partial hit: </strong> séu mörg orð með mismunandi merkingar, en eins skrifuð
-	 * <strong>Critical hit: </strong> orðið fundið og búið að fylla niðurstöðum í object.
-	 * Eða engin leitarniðurstaða.
+	 * sees if the results are:
+	 * <strong>Partial hit: </strong> many words with the different meaning spelled the same way.
+	 * <strong>Critical hit: </strong> the word is found and the results have been set in WordResults
+	 * Or no result.
 	 */
 	private void checkWordCount() {
 		String pr = pR.getType();
@@ -220,6 +225,11 @@ public class MainActivity extends FragmentActivity {
 		}
 	}
 
+	/**
+	 * 
+	 * @param word the WordResult
+	 * Constructs a new activity with the result.
+	 */
 	private void createNewActivity(WordResult word) {
 		Intent intent = new Intent(this, BeygingarActivity.class);
 		intent.putExtra("word", word);
@@ -231,29 +241,29 @@ public class MainActivity extends FragmentActivity {
 	 * @since 23.10.14
 	 * @version 0.1
 	 * 
-	 * Úbýr Dialog þar sem notandinn þarf að velja <strong>eitt</strong> af þeim orðum sem eru í results Arraylistanum
-	 * eða fara tilbaka.
+	 * Construct a Dialog where the user can choose <strong>one</strong> of the words in results ArrayList
+	 * or go back
 	 */
 	public class WordChooserDialogFragment extends DialogFragment {
 
 		/**
-		 * selectedItem - það stak sem er valið í Dialognum, fyrsta stakið á listanum ef ekkert er valið.
-		 * charArr - Eru þau orð sem ParseThread skilar ef partialHit.
+		 * selectedItem - the object which was last chosen in the dialog, or the first object in the list if nothing was chosen
+		 * charArr - Are the words which the ParserResult contains if it return a PartialHit
 		 */
 		private String selectedItem = null;
 		private CharSequence[] charArr;
 
 		/**
-		 *  Smiður fyrir WordChooserDialog.
-		 *  Dialog þar sem notandi getur valið um leitarniðurstöður.
-		 *  Einungis hægt að velja eitt orð.
+		 *  The constructor for WordChooserDialogFragment
+		 *  A dialog where the user can choose between search results
+		 *  Only one word can be chosen.
 		 */
 		public WordChooserDialogFragment() {
 			toCharArr();
 		}
 
 		/**
-		 * Breytir results ArrayListanum í CharSequence fylki
+		 * cast the ArrayList to a CharSequence.
 		 */
 		private void toCharArr() {
 			charArr = new CharSequence[pR.getDesc().length];
@@ -270,7 +280,7 @@ public class MainActivity extends FragmentActivity {
 			builder.setSingleChoiceItems(charArr, -1 , 
 					new DialogInterface.OnClickListener() {
 				/**
-				 * listener hlustar á það atriði sem notandinn velur í dialognum
+				 * a listener which listens to which result the user chooses from the dialog
 				 */
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
@@ -280,8 +290,8 @@ public class MainActivity extends FragmentActivity {
 
 			builder.setPositiveButton(R.string.afram, new DialogInterface.OnClickListener() {
 				/**
-				 * listener hlustar á ef notandinn ýtir á afram takkann.
-				 * Ef ekkert er valið og notandi ýtir á áfram þá lokast Dialoginn.
+				 * a listener if the user presses the continue button
+				 * If nothing is chosem then the dialog closes
 				 */
 				public void onClick(DialogInterface dialog, int id) {
 					if( selectedItem != null) {
@@ -292,7 +302,7 @@ public class MainActivity extends FragmentActivity {
 			});
 			builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 				/**
-				 * listener hlustar á ef notandi ýtir á cancel takka, engin virkni þar sem hún er óþörf
+				 * a listener for the cancel button, nothing happens except the dialog closes
 				 */
 				public void onClick(DialogInterface dialog, int id) {
 					// User cancelled the dialog
@@ -306,22 +316,22 @@ public class MainActivity extends FragmentActivity {
 	 * 
 	 * @author Arnar, Jón Friðrik
 	 * @since 23.10.14
-	 * @version 0.2
+	 * @version 1.0
 	 * 
 	 */
 	private class ParseThread extends AsyncTask<Void, Void, Void> {
 		/**
-		 * parser - parserinn sem er búinn til að til ná í gögnin
-		 * url - urlinn sem parserinn notar. 
+		 * parser - the parser which is constructed to retrieve the results
+		 * url - the url which the parser uses. 
 		 */
 		private HTMLParser parser;
 		private String url;
 
 		/**
 		 * 
-		 * @param searchWord -strengurinn sem á að skeita inn í urlinn.
-		 * Búið að converta searchWord strengnum í UTF-8 streng. 
-		 * Má leita af hvaða orðmynd.
+		 * @param searchWord -the string which is concated into the url
+		 * the searchWord string has been converted to UTF-8
+		 * (Má leita af hvaða orðmynd.)
 		 */
 		public ParseThread(String searchWord) {
 			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?q=";
@@ -329,7 +339,7 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		/**
-		 * @param searchId - heiltalan sem á að skeita inn í urlinn.
+		 * @param searchId - the id (int) which will be concated into the url
 		 */
 		public ParseThread(int searchId) {
 			String baseURL = "http://dev.phpbin.ja.is/ajax_leit.php/?id=";
@@ -342,7 +352,7 @@ public class MainActivity extends FragmentActivity {
 		}
 
 		/**
-		 * fallið sem þráðurinn keyrir eftir að hann er smíðaður. 
+		 * the function which is after the thread has been constructed
 		 */
 		@Override
 		protected Void doInBackground(Void... args) {
@@ -357,8 +367,8 @@ public class MainActivity extends FragmentActivity {
 			return null;
 		}
 		/**
-		 * Fallið sem þráðurinn keyrir þegar hann er búinn að keyra doInBackground.
-		 * setur síðan ParserResults í MainActivity
+		 * the function which is called when the diInBackground function is finished
+		 * ParserResults are set in MainActivity.
 		 */
 		@Override
 		protected void onPostExecute(Void args) {

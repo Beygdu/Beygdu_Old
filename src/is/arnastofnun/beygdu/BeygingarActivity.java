@@ -32,17 +32,17 @@ import com.example.beygdu.R;
  * @since 25.10.14
  * @version 1.0
  *
- *BeygingarActivity inniheldur LinearLayout með ScrollViewi sem inniheldur TableLayout.
- *Töflurnar eru síðan framleiddar inní TableLayoutið.
+ *BeygingarActivity contains a LinearLayout with a ScrollView which contains a TableLayout.
+ *The tables are then plaved in the TableLayout.
  */
 public class BeygingarActivity extends FragmentActivity {
 
 	/**
-	 * tableLayout er Tablelayout activitiesins, hér inn fara öll TextView og TableFragmentin.
-	 * tables er ArrayListi sem inniheldur þær töflur sem eru sýndar í TableLayoutinu.
-	 * blockNames er ArrayListi sem inniheldur titil allra blocka bæði sýnilega og ósýnlega.
-	 * mSelectedItems er ArrayListi sem inniheldur indexa taflana sem notandi hefur valið úr TableChooserDialogFragmentinu 
-	 * words - er niðurstaðan frá parsernum.
+	 * tableLayout is the TableLayout in the activity, the TextViews and TableFragments are added to it
+	 * tables is a ArrayLists which contains the tables which are shown in the TableLayout.
+	 * blockNames is a ArrayList which contains the title of each block , visible and not visible.
+	 * mSelectedItems is an ArrayList which contains the indexes of the tables the user has chosein in the TableChooserDialogFragment.
+	 * words - is the result from the Parser
 	 */
 	private TableLayout tableLayout;
 	private ArrayList<TableFragment> tables = new ArrayList<TableFragment>();
@@ -70,8 +70,8 @@ public class BeygingarActivity extends FragmentActivity {
 	}
 	
 	/**
-	 * Býr til TextView með titil á word og TextView með athugasemd um orð ( ef á við) og setur í tableLayoutið.
-	 * smíðar síðan Tablefragment fyrir hverja block sem word inniheldur. 
+	 * Constructs a TextView with the title of the word and possibly a TextView with a note about the word, if it exits, 
+	 * and puts them into the tableLayout. Then a TableFragment is constructed for each block in the word.
 	 */
 	private void initTables(){
 		//SetTitle
@@ -109,7 +109,7 @@ public class BeygingarActivity extends FragmentActivity {
 	}
 	
 	/**
-	 * if word contains more than one block a TableChooserDialogFragment is constructed.
+	 * If word contains more than one block a TableChooserDialogFragment is constructed.
 	 */
 	public void filterAction(){
 		if (words.getBlocks().size() > 1) {
@@ -183,26 +183,26 @@ public class BeygingarActivity extends FragmentActivity {
 	 * @since 23.10.14
 	 * @version 1.0
 	 * 
-	 * Úbýr Dialog þar sem notandinn getur valið mörg ekkert, eitt eða fleirri blocks til að sýna í tablelayoutinu.
+	 * Construct a Dialog where the chooser can choose multiple blocks which are drawn in the tableLayout.
 	 */
 	public class TableChooserDialogFragment extends DialogFragment {
 
 		/**
-		 * charArr - er Charsequence fylki með titil allra blocka
+		 * charArr - Charsequence array containing all the titles of the clocks
 		 */
 
 		private CharSequence[] charArr;
 
 		/**
-		 *  Smiður fyrir TableChooserDialogFragment.
-		 *  Dialog þar sem notandi getur valið um töflur.
+		 *  The constructor for TableChooserDialogFragment
+		 *  A dialog where the user can choose blocks from the WordResults
 		 */
 		public TableChooserDialogFragment() {
 			makeCharArr();
 		}
 		
 		/**
-		 * fyllir charArr af block titlum.
+		 * fills the charArr with block titles
 		 */
 		private void makeCharArr() {
 			charArr = new CharSequence[blockNames.size()];

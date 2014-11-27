@@ -22,16 +22,16 @@ import com.example.beygdu.R;
 	 * @since 20.10.14
 	 * @version 0.9
 	 * 
-	 * Generísk tafla sem er útbúin út frá WordResult hlutnum.
-	 * Fjöldi raða og dálka veldur á fjöld af dálka og raðar hausum í WordResult hlutnum. 
+	 * Generic Table which is constructed from the information in WordResult
+	 * The amount of rows and columns depends in the size of the ArrayLists containing the col and row headers in the WordResult object
 	 */
 	public class TableFragment extends Fragment {
 
 		/**
-		 * context - er contextið sem taflan birtist í
-		 * content er arraylisti af þeim strengjum, í réttri röð, sem eiga að birtast
-		 * block - inniheldur raðar og column headerana og contentið á töflunni
-		 * title - er titilinn á töflunni
+		 * context - is context the table is added to
+		 * content - is an arraylist of the content which is added into the table, in the right order
+		 * block - contains the row and col headers and the content of the of the table.
+		 * title - the title of the table
 		 */
 		private Context context;
 		private TableLayout tableLayout;
@@ -53,7 +53,7 @@ import com.example.beygdu.R;
 		}
 		
 		/**
-		 * @return titilinn á töflunni.
+		 * @return the title of the table
 		 */
 		public CharSequence getTitle() {
 			return title.getText();
@@ -69,9 +69,9 @@ import com.example.beygdu.R;
 		}
 		
 		/**
-		 * býr til textview með titli subblokkar ef hann er til.
-		 * Býr síðan til TextView með titil á töflunni og kallar síðan á 
-		 * createTable sem smíðar töfluna fyrir allar töflur í subblokkinu.
+		 * constructs a TextView containing the title of the subBlock
+		 * and a TextView containing the title of the tables and then calls 
+		 * the function createTable which constucts the tables in the subBlock
 		 */
 		private void createBlock() {
 			tableLayout.addView(title);
@@ -98,8 +98,8 @@ import com.example.beygdu.R;
 		}	
 		
 		/**
-		 * @param table taflan sem á að smíða
-		 * Býr til TableRow fyrir hverja röð og TextView fyrir hvern column.
+		 * @param table the table which is to be built
+		 * Makes a tableTow for each row which contains TextView for each column.
 		 */
 		private void createTable(Tables table) {
 			final int rowNum = table.getRowNames().length;
