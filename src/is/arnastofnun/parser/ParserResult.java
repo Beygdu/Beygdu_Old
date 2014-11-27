@@ -6,6 +6,12 @@ package is.arnastofnun.parser;
 import java.util.ArrayList;
 
 
+/**
+ * @author Arnar Jonsson
+ * @since 18.11.2014
+ * @version 0.4
+ *
+ */
 public class ParserResult {
 
   private String type;
@@ -22,126 +28,131 @@ public class ParserResult {
   private String note;
   private ArrayList<ArrayList<String>> results;
   
-  //////
-  //////
-  //////
-  public ParserResult() {
+
+  /**
+ *  Empty constructor
+ */
+public ParserResult() {
   
   }
   
-  //
-  //
-  //
-  public String getSearchWord() {
+  /**
+ * @return The header of the search (search string), if there is any
+ */
+public String getSearchWord() {
     return this.searchWord;
   }
-  
-  ///
-  ///
-  ///
-  public void setSearchWord(String a) {
+
+  /**
+ * @param a Sets the header of the search (search string)
+ */
+public void setSearchWord(String a) {
     this.searchWord = a;
   }
-  
-  //
-  //
-  //
-  public int getId() {
+
+  /**
+ * @return The id of the header of the search, if there is any
+ */
+public int getId() {
     return this.id;
   }
-  
-  ///
-  ///
-  ///
-  public void setId(int a) {
+
+  /**
+ * @param a Sets the id of the search
+ */
+public void setId(int a) {
     this.id = a;
   }
-  
-  //
-  //
-  //
-  public String getType() {
+
+  /**
+ * @return The type of the results, if there is any
+ */
+public String getType() {
     return this.type;
   }
   
-  ///
-  ///
-  ///
-  public void setType(String a) {
+  /**
+ * @param a Sets the type of the results
+ */
+public void setType(String a) {
     this.type = a;
   }
-  
-  //
-  //
-  //
-  public int[] getIds() {
+
+  /**
+ * @return An array of id's if the search string of multiple hits, if there are any
+ */
+public int[] getIds() {
     return this.ids;
   }
-  
-  ///
-  ///
-  ///
-  public void setIds(int[] a) {
+
+  /**
+ * @param a Sets the array of id's used for multiple result hits
+ */
+public void setIds(int[] a) {
     this.ids = a;
   }
-  
-  //
-  //
-  //
-  public String[] getDesc() {
+
+  /**
+ * @return A description of the search result, if there is any
+ */
+public String[] getDesc() {
     return this.desc;
   }
-  
-  ///
-  ///
-  ///
-  public void setDesc(String[] a) {
+
+  /**
+ * @param a Sets a description of the search result
+ */
+public void setDesc(String[] a) {
     this.desc = a;
   }
-  
-  //
-  //
-  //
-  public String getTitle() {
+
+  /**
+ * @return The title string of the results, if there is any
+ */
+public String getTitle() {
     return this.title;
   }
-  
-  ///
-  ///
-  ///
-  public void setTitle(String a) {
+
+  /**
+ * @param a Sets the title of the results
+ */
+public void setTitle(String a) {
     this.title = a;
   }
-  
-  //
-  //
-  //
-  public String getNote() {
+
+  /**
+ * @return The note of the results, if there is any
+ */
+public String getNote() {
     return this.note;
   }
-  
-  ///
-  ///
-  ///
-  public void setNode(String a) {
+
+  /**
+ * @param a Sets the note of the results
+ */
+public void setNode(String a) {
     this.note = a;
   }
-  
-  //
-  //
-  //
-  public ArrayList<ArrayList<String>> getResults() {
+
+  /**
+ * @return A list of lists containing raw results categorized by identify substrings, if there are any
+ */
+public ArrayList<ArrayList<String>> getResults() {
     return this.results;
   }
-  
-  ///
-  ///
-  ///
-  public void setResults(ArrayList<ArrayList<String>> a) {
+
+  /**
+ * @param a Sets a list of lists containing raw results categorize by identify substrings
+ */
+public void setResults(ArrayList<ArrayList<String>> a) {
     this.results = a;
   }
   
-  public WordResult getWordResult() {
+  /**
+ * @return Object WordResults which contains refined search results categorized by the
+ * Block - SubBlock - Tables architecture
+ */
+public WordResult getWordResult() {
   
   return new WordResult(this.type, this.title, this.note, this.results);
   

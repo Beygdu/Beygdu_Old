@@ -6,6 +6,11 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @author Arnar Jonsson
+ * @since 20.11.2014
+ * @version 0.4
+ */
 public class WordResult implements Serializable {
 
 	private String type;
@@ -16,6 +21,12 @@ public class WordResult implements Serializable {
 	
 	private ArrayList<ArrayList<String>> dump;
 	
+	/**
+	 * @param type The type of the result
+	 * @param title The title of the result
+	 * @param note A note describing specific results
+	 * @param dump A crude list of lists containing raw results
+	 */
 	public WordResult(String type, String title, String note, ArrayList<ArrayList<String>> dump) {
 		
 		this.type = type;
@@ -26,39 +37,34 @@ public class WordResult implements Serializable {
 		populateBlockList();
 	}
 
-	// Public Methods
-	
-	//
-	//
-	//
-	public String getTpe() {
+	/**
+	 * @return The type of the results
+	 */
+	public String getType() {
 		return this.type;
 	}
-	
-	//
-	//
-	//
+
+	/**
+	 * @return The Title of the result
+	 */
 	public String getTitle() {
 		return this.title;
 	}
-	
-	//
-	//
-	//
+
+	/**
+	 * @return The note describing specific results
+	 */
 	public String getNote() {
 		return this.note;
 	}
 	
-	//
-	//
-	//
+	/**
+	 * @return A list of Blocks which contain refined results
+	 */
 	public ArrayList<Block> getBlocks() {
 		return this.blocks;
 	}
 	
-	// Private Methods
-	
-	// Helper Functions
 	
 	private String destroyPointer(String a) {
 		return a.substring(a.indexOf(" ")+1, a.length());
@@ -158,7 +164,7 @@ public class WordResult implements Serializable {
 	private String[] constructSoRowNames(String a, String b) {
 		String[] errorArray = { "" };
 		
-		if( a.contains("Ópersónuleg notkun - Germynd (Gervifrumlag)") ) {
+		if( a.contains("(Gervifrumlag)") ) {
 			String[] temp = { "", "3. pers." };
 			return temp;			
 		}
@@ -191,12 +197,19 @@ public class WordResult implements Serializable {
 		return errorArray;
 	}
 	
+	private String checkSoNeededTitle(String a, String bTitle) {
+		
+		if( bTitle.contains("Boðháttur") || bTitle.contains("Sagnbót") || bTitle.contains("nútíðar") ) {
+			return "";
+		}
+		
+		return a;
+	}
+	
 	private Tables constructSoTables(ArrayList<String> a, String bTitle, String sbTitle) {
 		
-		String nTitle = constructSoTitle(a.get(0));
-		if( bTitle.contains("Boðháttur") || bTitle.contains("Sagnbót") || bTitle.contains("nútíðar") ) {
-			nTitle = "";
-		}
+		String nTitle = checkSoNeededTitle(constructSoTitle(a.get(0)), bTitle);
+		
 		ArrayList<String> content = new ArrayList<String>();
 		
 		String[] columnNames = constructSoColumnNames(bTitle, sbTitle);
@@ -231,10 +244,8 @@ public class WordResult implements Serializable {
 	
 	private SubBlock constructSoSubBlock(ArrayList<String> a, String bTitle) {
 		
-		String nTitle = destroyPointer(a.get(0));
-		if( bTitle.contains("Boðháttur") || bTitle.contains("Sagnbót") || bTitle.contains("nútíðar") ) {
-			nTitle = "";
-		}
+		String nTitle = checkSoNeededTitle(destroyPointer(a.get(0)), bTitle);
+		
 		ArrayList<Tables> tables = new ArrayList<Tables>();
 		
 		ArrayList<ArrayList<String>> rawTables = new ArrayList<ArrayList<String>>();

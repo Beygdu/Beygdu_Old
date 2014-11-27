@@ -17,22 +17,31 @@ import java.lang.NullPointerException;
 import java.lang.NumberFormatException;
 import java.lang.IndexOutOfBoundsException;
 
+/**
+ * @author Arnar Jonsson
+ * @since 18.11.2014
+ * @version 0.6
+ *
+ */
 public class HTMLParser {
 
   public static ParserResult PR = new ParserResult();
 
   
 
-  public HTMLParser(Document doc) {
+  /**
+ * @param doc A Jsoup HTML document 
+ */
+public HTMLParser(Document doc) {
 	  
 	  constructParserResults(doc);
 	  
   }
-  
-  //
-  //
-  //
-  public ParserResult getParserResult() {
+
+  /**
+ * @return Object ParserResult, contains raw results extracted from the HTML document
+ */
+public ParserResult getParserResult() {
 	  return this.PR;
   }
   
