@@ -133,6 +133,9 @@ public class WordResult implements Serializable {
 		return returnString;
 	}
 	
+	/**
+	 * @category Construction of column titles for the verb Tables
+	 */
 	private String[] constructSoColumnNames(String a, String b) {
 		String[] errorArray = { "" };
 		
@@ -161,6 +164,9 @@ public class WordResult implements Serializable {
 		return errorArray;
 	}
 	
+	/**
+	 * @category Construction of row titles for the verb Tables
+	 */
 	private String[] constructSoRowNames(String a, String b) {
 		String[] errorArray = { "" };
 		
@@ -206,6 +212,9 @@ public class WordResult implements Serializable {
 		return a;
 	}
 	
+	/**
+	 * @category Construction of Tables for verbs
+	 */
 	private Tables constructSoTables(ArrayList<String> a, String bTitle, String sbTitle) {
 		
 		String nTitle = checkSoNeededTitle(constructSoTitle(a.get(0)), bTitle);
@@ -242,6 +251,9 @@ public class WordResult implements Serializable {
 		return new Tables(nTitle, columnNames, rowNames, content);
 	}
 	
+	/**
+	 * @category Constructions of SubBlocks for verbs
+	 */
 	private SubBlock constructSoSubBlock(ArrayList<String> a, String bTitle) {
 		
 		String nTitle = checkSoNeededTitle(destroyPointer(a.get(0)), bTitle);
@@ -283,6 +295,10 @@ public class WordResult implements Serializable {
 		return new SubBlock(nTitle, tables);
 	}
 	
+	/**
+	 * @param a ArrayList of raw results
+	 * @category Constructions of Blocks for verbs
+	 */
 	private void constructSoBlock(ArrayList<String> a) {
 		
 		String nTitle = destroyPointer(a.get(0));
@@ -324,6 +340,9 @@ public class WordResult implements Serializable {
 		
 	}
 	
+	/**
+	 * @category Construction of Blocks for verbs
+	 */
 	private void populateSoBlocks() {
 		for( ArrayList<String> aList : dump ) {
 			
@@ -346,6 +365,10 @@ public class WordResult implements Serializable {
 				(a.contains("Karlkyn") && a.contains("Kvenkyn") && a.contains("Hvorugkyn"));
 	}
 	
+	/**
+	 * @param a ArrayList of raw results
+	 * @category Construction of Tables for adjectives
+	 */
 	private Tables constructLoTables(ArrayList<String> a) {
 		
 		String nTitle = destroyPointer(a.get(0));
@@ -368,6 +391,10 @@ public class WordResult implements Serializable {
 		return new Tables(nTitle, columnNames, rowNames, content);
 	}
 	
+	/**
+	 * @param a ArrayList of raw results
+	 * @category Construction of SubBlocks for adjective
+	 */
 	private SubBlock constructLoSubBlock(ArrayList<String> a) {
 		
 		String nTitle = constructLoTitle(a.get(0));
@@ -406,6 +433,10 @@ public class WordResult implements Serializable {
 		return new SubBlock(nTitle, tables);
 	}
 	
+	/**
+	 * @param a ArrayList of raw results
+	 * @category Construction of Blocks for adjectives
+	 */
 	private void constructLoBlock(ArrayList<String> a) {
 		
 		String nTitle = constructLoTitle(a.get(0));
@@ -450,6 +481,9 @@ public class WordResult implements Serializable {
 		this.blocks.add(new Block(nTitle, sB));
 	}
 	
+	/**
+	 * @category Constructions of Blocks for adjectives
+	 */
 	private void populateLoBlocks() {
 		for( ArrayList<String> aList : dump ) {
 			
@@ -464,6 +498,10 @@ public class WordResult implements Serializable {
 				(a.length() <= 3) || (a.contains("án greinis með greini"));
 	}
 	
+	/**
+	 * @param a ArrayList of raw results
+	 * @category Construction of Tables for nouns
+	 */
 	private Tables constructNoTables(ArrayList<String> a) {
 		
 		String nTitle = destroyPointer(a.get(0));
@@ -486,6 +524,10 @@ public class WordResult implements Serializable {
 		return new Tables(nTitle, columnNames, rowNames, content);
 	}
 	
+	/**
+	 * @param a ArrayList of raw results
+	 * @category Construction of SubBlocks for nouns
+	 */
 	private void constructNoBlock(ArrayList<String> a) {
 		
 		String nTitle = "";
@@ -532,6 +574,9 @@ public class WordResult implements Serializable {
 		this.blocks.add(new Block(nTitle, sB));
 	}
 	
+	/**
+	 * @category Constructions of Blocks for nouns
+	 */
 	private void populateNoBlocks() {
 		
 		for( ArrayList<String> aList : dump ) {
@@ -541,6 +586,10 @@ public class WordResult implements Serializable {
 		}
 	}
 	
+	/**
+	 * Constructs Blocks, SubBlocks and Tables for the search results from HTMLParser, depending on
+	 * the type of the results
+	 */
 	private void populateBlockList() {
 	    
 		if(this.title.contains("Sagnorð")) {
